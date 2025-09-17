@@ -1,0 +1,33 @@
+all:
+  children:
+    etcd:
+      hosts:
+        node1:
+          ansible_host: hosts-ip
+        node2:
+          ansible_host: hosts-ip
+        node3:
+          ansible_host: hosts-ip
+
+    patroni_hosts:
+      hosts:
+        node1:
+          ansible_host: hosts-ip
+        node2:
+          ansible_host: hosts-ip
+
+    db_nodes:
+      hosts:
+        node1:
+          ansible_host: hosts-ip
+        node2:
+          ansible_host: hosts-ip
+
+    all_hosts:
+      hosts:
+        node1:
+          ansible_host: hosts-ip
+        node2:
+          ansible_host: hosts-ip
+        node3:
+          ansible_host: hosts-ip

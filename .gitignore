@@ -1,0 +1,45 @@
+# Virtual environment
+.venv/
+.venv*/
+
+# IDE and editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ansible specific
+.ansible/
+ansible.cfg
+retry-files/
+
+# Inventory directory (ignore everything)
+inventory/*
+
+# But keep example files
+!/inventory/hosts_example.yml
+!/inventory/group_vars/all.example.yml
+!/inventory/group_vars/etcd.example.yml
+!/inventory/group_vars/patroni.example.yml
+
+# Local variables and secrets
+*.retry
+vault.yml
+vault-pass.txt
+secrets/
+.env
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
