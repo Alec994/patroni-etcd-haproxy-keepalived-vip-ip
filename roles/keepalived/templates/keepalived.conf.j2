@@ -17,11 +17,11 @@ vrrp_instance vrrp_1 {
     advert_int 1
 
     virtual_ipaddress {
-        {{ keepalived.vip }}/{{ keepalived.vip_netmask }}
+        {{ keepalived_vip }}/{{ keepalived_vip_netmask }}
     }
 
     track_interface {
-        {{ keepalived.keepalived_interface | default(ansible_default_ipv4.interface) }} weight -2
+        {{ keepalived_interface | default(ansible_default_ipv4.interface) }} weight -2
     }
 
     track_script {

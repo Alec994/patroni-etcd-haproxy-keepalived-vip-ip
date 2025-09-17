@@ -26,12 +26,12 @@ defaults
 
 listen stats
     mode http
-    bind *:{{ keepalived.haproxy_stats_port }}
+    bind *:{{ haproxy_stats_port }}
     stats enable
     stats uri /
 
 listen primary
-    bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }}
+    bind {{ haproxy_vip }}:{{ haproxy_primary_port }}
     option httpchk OPTIONS /master
     http-check expect status 200
     default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
@@ -40,7 +40,7 @@ listen primary
 {% endfor %}
 
 listen standby
-    bind {{ keepalived.vip }}:{{ keepalived.haproxy_standby_port }}
+    bind {{ haproxy_vip }}:{{ haproxy_standby_port }}
     balance roundrobin
     option httpchk OPTIONS /replica
     http-check expect status 200

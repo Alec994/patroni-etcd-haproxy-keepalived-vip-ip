@@ -40,19 +40,24 @@
   register: patroni_pg_ctl
   changed_when: false
   ignore_errors: true
-  failed_when: patroni_pg_ctl.rc != 1
+  failed_when: false
+
+- name: "Set pg_bin_files fact"
+  ansible.builtin.set_fact:
+    patroni_pg_bin_files: "{{ patroni_pg_ctl.stdout_lines[0] | default('') }}"
+  failed_when: false
 
 - name: "Printing pg_ctl"
   ansible.builtin.debug:
-    msg: '{{ patroni_pg_ctl.stdout_lines }}'
+    msg: "pg_ctl dir = {{ patroni_pg_bin_files }}"
 
-- name: "Generate Patroni Environment Config From Template"
-  ansible.builtin.template:
-    src: "etc/profile.d/patroni-env.sh.j2"
-    dest: /etc/profile.d/patroni-env.sh
-    owner: root
-    group: root
-    mode: "0644"
+# - name: "Generate Patroni Environment Config From Template"
+#   ansible.builtin.template:
+#     src: "etc/profile.d/patroni-env.sh.j2"
+#     dest: /etc/profile.d/patroni-env.sh
+#     owner: root
+#     group: root
+#     mode: "0644"
 
 - name: "Creating Log Directory For Patroni"
   ansible.builtin.file:
@@ -90,16 +95,17 @@
   tags:
     - patroni_template
   ansible.builtin.template:
-    src: 'patroni/templates/etc/patroni/patroni.yml.no.ssl.j2'
+    src: 'patroni.yml.no.ssl.j2'
     dest: /etc/patroni/patroni.yml
     mode: "0744"
   vars:
     pg_data_dir: /data/pg_data
     pg_bin_files: '{{ patroni_pg_ctl.stdout_lines[0] }}'
+  ignore_errors: true
 
 - name: "Patroni Service Setting"
   ansible.builtin.template:
-    src: 'patroni/templates/etc/systemd/system/patroni.service.j2'
+    src: 'patroni.service.j2'
     dest: '/etc/systemd/system/patroni.service'
     mode: '0644'
     owner: root

@@ -1,0 +1,5 @@
+haproxy_vip: 10.70.40.246
+haproxy_vip_netmask: 24
+haproxy_stats_port: 7000
+haproxy_primary_port: 5000
+haproxy_standby_port: 5001

@@ -1,0 +1,8 @@
+- name: "Installing And Creating Patroni Cluster"
+  hosts: patroni_hosts
+  become: true
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: common

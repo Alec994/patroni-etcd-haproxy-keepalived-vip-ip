@@ -1,0 +1,4 @@
+keepalived_vip: 10.70.40.246
+keepalived_vip_netmask: 24
+keepalived_priority: "{{ 120 if inventory_hostname == 'node1' else 110 }}"
+#  keepalived_interface: 'interface'

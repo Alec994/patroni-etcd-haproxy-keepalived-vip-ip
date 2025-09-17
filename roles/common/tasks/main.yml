@@ -1,0 +1,14 @@
+- name: "Getting pg_ctl Directory"
+  ansible.builtin.command: "find / -name pg_ctl -printf '%h\\n'"
+  register: patroni_pg_ctl
+  changed_when: false
+  ignore_errors: true
+  failed_when: false
+
+- name: "Set pg_bin_files fact"
+  ansible.builtin.set_fact:
+    patroni_pg_bin_files: "{{ patroni_pg_ctl.stdout_lines[0] | default('') }}"
+
+- name: "Printing pg_ctl"
+  ansible.builtin.debug:
+    msg: "pg_ctl dir = {{ patroni_pg_bin_files }}"
