@@ -1,0 +1,4 @@
+- name: Run createrepo
+  ansible.builtin.command:
+    cmd: createrepo {{ repos_redos_dest_dir }}
+  changed_when: true

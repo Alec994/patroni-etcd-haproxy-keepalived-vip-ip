@@ -1,0 +1,39 @@
+---
+- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - keepalived
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
+
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - keepalived
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
+
+- name: "Coping haproxy script to hosts"
+  ansible.builtin.template:
+    src: 'script_keepalived.j2'
+    dest: '/etc/keepalived/chk_haproxy.sh'
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Configuring keepalived"
+  ansible.builtin.template:
+    src: 'keepalived.conf.j2'
+    dest: /etc/keepalived/keepalived.conf
+    backup: true
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Starting keepalived service"
+  ansible.builtin.systemd:
+    name: keepalived.service
+    state: restarted
+    enabled: true

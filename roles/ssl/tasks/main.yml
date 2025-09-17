@@ -1,0 +1,9 @@
+- name: "Include SSL certificate generation"
+  ansible.builtin.include_tasks: generate.yml
+  run_once: true
+  delegate_to: localhost
+  tags: certgen
+
+- name: "Deploy certificates to target hosts"
+  ansible.builtin.include_tasks: deploy.yml
+  tags: certdeploy

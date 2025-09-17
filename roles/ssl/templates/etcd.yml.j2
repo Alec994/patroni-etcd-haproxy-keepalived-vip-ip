@@ -1,0 +1,32 @@
+{%- if global.enable_ssl   -%}
+{%-   set proto = 'https'  -%}
+{%- else  -%}
+{%-   set proto = 'http'   -%}
+{%- endif -%}
+{%- macro ip_url() -%}{{ proto }}://{{ ansible_host }}{%- endmacro -%}
+{%- macro hostname_url() -%}{{ proto }}://{{ ansible_hostname }}{%- endmacro -%}
+name: {{ ansible_hostname }}
+data-dir: /var/lib/etcd/{{ ansible_hostname }}
+listen-peer-urls: {{ ip_url() }}:{{ peer_urls_port }}
+listen-client-urls: {{ ip_url() }}:{{ client_urls_port }},{{ proto }}://127.0.0.1:{{ client_urls_port }}
+initial-advertise-peer-urls: {{ ip_url() }}:{{ peer_urls_port }}
+advertise-client-urls: {{ hostname_url() }}:{{ client_urls_port }}
+initial-cluster: {% for host in groups['etcd'] -%}
+{{ host }}={{ proto }}://{{ hostvars[host]['ansible_host'] }}:{{ peer_urls_port }}{{ ',' if not loop.last else '' }}
+{%- endfor %}
+
+initial-cluster-state: new
+initial-cluster-token: P@ssw0rdTOKENWOULDBEP@ssw0rd
+enable-v2: true
+
+{% if global.enable_ssl -%}
+client-transport-security:
+  cert-file: /etc/etcd/ssl/{{ ansible_hostname }}.crt
+  key-file: /etc/etcd/ssl/{{ ansible_hostname }}.pem
+  trusted-ca-file: /etc/etcd/ssl/{{ ssl_ca_base_filename }}.crt
+
+peer-transport-security:
+  cert-file: /etc/etcd/ssl/{{ ansible_hostname }}.crt
+  key-file: /etc/etcd/ssl/{{ ansible_hostname }}.pem
+  trusted-ca-file: /etc/etcd/ssl/{{ ssl_ca_base_filename }}.crt
+{%- endif %}

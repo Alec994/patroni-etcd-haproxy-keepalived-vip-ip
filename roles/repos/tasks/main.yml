@@ -1,0 +1,86 @@
+# roles/repos/tasks/main.yml
+
+# --- Проверка доступности онлайн-репозиториев ---
+- name: "Check if RedOS repo site is reachable"
+  ansible.builtin.command: ping -c 2 "{{ repos_redos_uri }}"
+  register: repos_redos_ping
+  ignore_errors: true
+  changed_when: false
+  when: ansible_facts['os_family'] in ["RedHat", "RED"]
+
+- name: "Check if Astra repo site is reachable"
+  ansible.builtin.command: ping -c 2 "{{ repos_astra_uri }}"
+  register: repos_astra_ping
+  ignore_errors: true
+  changed_when: false
+  when: ansible_facts['os_family'] in ["Debian", "Astra Linux"]
+
+
+# --- Если интернет доступен ---
+- name: "RedOS repo reachable"
+  ansible.builtin.debug:
+    msg: "RedOS repo is reachable, using online repositories"
+  when: ansible_facts['os_family'] in ["RedHat", "RED"] and repos_redos_ping is defined and repos_redos_ping.rc == 0
+
+- name: "Astra repo reachable"
+  ansible.builtin.debug:
+    msg: "Astra repo is reachable, using online repositories"
+  when: ansible_facts['os_family'] in ["Debian", "Astra Linux"] and repos_astra_ping is defined and repos_astra_ping.rc == 0
+
+
+# --- Если интернета нет → готовим локальный репозиторий ---
+- name: "Ensure RedOS local repo directory exists"
+  ansible.builtin.file:
+    path: "{{ repos_redos_dest_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ansible_facts['os_family'] in ["RedHat", "RED"] and (repos_redos_ping.rc is not defined or repos_redos_ping.rc != 0)
+
+- name: "Copy RedOS local packages"
+  ansible.builtin.copy:
+    src: "{{ repos_redos_dir }}/"
+    dest: "{{ repos_redos_dest_dir }}/"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Run createrepo
+  when: ansible_facts['os_family'] in ["RedHat", "RED"] and (repos_redos_ping.rc is not defined or repos_redos_ping.rc != 0)
+
+- name: "Deploy RedOS local repo config"
+  ansible.builtin.template:
+    src: "redos-local.repo.j2"
+    dest: /etc/yum.repos.d/redos-local.repo
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_facts['os_family'] in ["RedHat", "RED"] and (repos_redos_ping.rc is not defined or repos_redos_ping.rc != 0)
+
+
+- name: "Ensure Astra local repo directory exists"
+  ansible.builtin.file:
+    path: "{{ repos_astra_dest_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  when: ansible_facts['os_family'] in ["Debian", "Astra Linux"] and (repos_astra_ping.rc is not defined or repos_astra_ping.rc != 0)
+
+- name: "Copy Astra local packages"
+  ansible.builtin.copy:
+    src: "{{ repos_astra_dir }}/"
+    dest: "{{ repos_astra_dest_dir }}/"
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_facts['os_family'] in ["Debian", "Astra Linux"] and (repos_astra_ping.rc is not defined or repos_astra_ping.rc != 0)
+
+- name: "Deploy Astra local repo config"
+  ansible.builtin.template:
+    src: "astra-local.list.j2"
+    dest: /etc/apt/sources.list.d/astra-local.list
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_facts['os_family'] in ["Debian", "Astra Linux"] and (repos_astra_ping.rc is not defined or repos_astra_ping.rc != 0)

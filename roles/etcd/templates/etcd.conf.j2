@@ -1,0 +1,21 @@
+{%- if use_ssl -%}
+{%-   set proto = 'https'  -%}
+{%- else  -%}
+{%-   set proto = 'http'   -%}
+{%- endif -%}
+{%- macro ip_url() -%}{{ proto }}://{{ ansible_host }}{%- endmacro -%}
+{%- macro hostname_url() -%}{{ proto }}://{{ ansible_hostname }}{%- endmacro -%}
+ETCD_NAME = {{ ansible_hostname }}
+ETCD_DATA_DIR = /var/lib/etcd/{{ ansible_hostname }}
+ETCD_LISTEN_PEER_URLS = {{ ip_url() }}:{{ peer_urls_port }}
+ETCD_LISTEN_CLIENT_URLS = {{ ip_url() }}:{{ client_urls_port }}
+ETCD_INITIAL_ADVERTISE_PEER_URLS = {{ ip_url() }}:{{ peer_urls_port }}
+ETCD_ADVERTISE_CLIENT_URLS = {{ hostname_url() }}:{{ client_urls_port }}
+ETCD_INITIAL_CLUSTER = {% for host in groups['etcd'] -%}
+{{ host }}={{ proto }}://{{ hostvars[host]['ansible_host'] }}:{{ peer_urls_port }}{{ ',' if not loop.last else '' }}
+{%- endfor %}
+
+ETCD_INITIAL_CLUSTER_STATE = new
+ETCD_INITIAL_CLUSTER_TOKEN = P@ssw0rdTOKENWOULDBEP@ssw0rd
+ETCD_ENABLE_V2 = true
+

@@ -1,0 +1,25 @@
+ssl_ssl:
+  root_dir: "{{ playbook_dir }}/ssl"
+
+  etcd_dir: "{{ ssl.root_dir }}/etcd"
+  patroni_dir: "{{ ssl.root_dir }}/patroni"
+  haproxy_dir: "{{ ssl.root_dir }}/haproxy"
+
+  ca:
+    privatekey_path: "{{ ssl.root_dir }}/ca-key.pem"
+    csr_path: "{{ ssl.root_dir }}/ca.csr"
+    cert_path: "{{ ssl.root_dir }}/ca-cert.pem"
+    common_name: "Cluster-CA"
+
+  subject:
+    country_name: "RU"
+    state_or_province_name: "Moscow"
+    locality_name: "Moscow"
+    organization_name: "MyOrg"
+    organizational_unit_name: "DBA"
+
+# Куда класть на хостах
+ssl_dest:
+  etcd: /etc/etcd/ssl
+  patroni: /etc/patroni/ssl
+  haproxy: /etc/haproxy/ssl

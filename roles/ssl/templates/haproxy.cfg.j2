@@ -1,0 +1,50 @@
+# {{ ansible_managed }}
+# HAProxy configuration template
+
+global
+    log 127.0.0.1 local2
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    maxconn 4000
+    daemon
+
+defaults
+    mode tcp
+    log global
+    option tcplog
+    retries 3
+    timeout queue 1m
+    timeout connect 10s
+    timeout client 1m
+    timeout server 1m
+    timeout check 10s
+    maxconn 3000
+
+listen stats
+    mode http
+    bind *:{{ keepalived.haproxy_stats_port }}
+    stats enable
+    stats uri /
+
+listen primary
+    bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }}
+    option httpchk OPTIONS /master
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+{% for host in groups['db_nodes'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] | default(hostvars[host]['ansible_default_ipv4']['address']) }}:5432 maxconn 100 check port 8008
+{% endfor %}
+
+listen standby
+    bind {{ keepalived.vip }}:{{ keepalived.haproxy_standby_port }}
+    balance roundrobin
+    option httpchk OPTIONS /replica
+    http-check expect status 200
+    default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
+{% for host in groups['db_nodes'] %}
+    server {{ host }} {{ hostvars[host]['ansible_host'] | default(hostvars[host]['ansible_default_ipv4']['address']) }}:5432 maxconn 100 check port 8008
+{% endfor %}

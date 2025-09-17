@@ -1,0 +1,11 @@
+repos_redos_uri: repo1.red-soft.ru
+repos_astra_uri: download.astralinux.ru
+
+repos_redos_dir: ~/patroni_etcd_cluster/prepare_hosts/local_repo_redos
+repos_astra_dir: ~/patroni_etcd_cluster/prepare_hosts/local_repo_astra
+
+repos_redos_dest_dir: /srv/repo/redos
+repos_astra_dest_dir: /srv/repo/astra
+
+repos_redos_temp_dir: local_rep_redos.j2
+repos_astra_temp_dir: local_rep_astra.j2

@@ -1,0 +1,4 @@
+{
+  "ansible.python.interpreterPath": "/root/patroni_with_roles/.venv/bin/python",
+  "python-envs.pythonProjects": []
+}

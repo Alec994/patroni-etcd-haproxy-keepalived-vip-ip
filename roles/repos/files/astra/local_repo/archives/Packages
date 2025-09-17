@@ -1,0 +1,920 @@
+Package: etcd-server
+Architecture: amd64
+Version: 3.4.23-4+ci202403051547+astra1
+Built-Using: go-md2man-v2 (= 2.0.2+ds1-1), golang-1.19 (= 1.19.13-1~bpo12+1+ci202404181526+astra4), golang-blackfriday-v2 (= 2.1.0-1), golang-github-beorn7-perks (= 1.0.1-1), golang-github-bgentry-speakeasy (= 0.1.0-2), golang-github-cespare-xxhash (= 2.1.1-2), golang-github-cockroachdb-datadriven (= 1.0.2-6), golang-github-coreos-bbolt (= 1.3.6-2), golang-github-coreos-go-systemd (= 22.3.2-1), golang-github-coreos-pkg (= 4-3), golang-github-coreos-semver (= 0.3.0-1), golang-github-creack-pty (= 1.1.18-1), golang-github-dustin-go-humanize (= 1.0.0-3), golang-github-golang-groupcache (= 0.0~git20200121.8c9f03a-2), golang-github-golang-jwt-jwt (= 4.4.3-1), golang-github-golang-protobuf-1-3 (= 1.3.5-4), golang-github-google-btree (= 1.0.0-1), golang-github-google-uuid (= 1.3.0-1), golang-github-gorilla-websocket (= 1.5.0-2), golang-github-grpc-ecosystem-go-grpc-middleware (= 1.3.0-1), golang-github-grpc-ecosystem-go-grpc-prometheus (= 1.2.0+git20191002.6af20e3-3), golang-github-grpc-ecosystem-grpc-gateway (= 1.6.4-2), golang-github-jonboulle-clockwork (= 0.1.0-4.1), golang-github-json-iterator-go (= 1.1.12-1), golang-github-mattn-go-runewidth (= 0.0.14-1), golang-github-modern-go-concurrent (= 1.0.3-1.1), golang-github-modern-go-reflect2 (= 1.0.2-2), golang-github-olekukonko-tablewriter (= 0.0.5-2), golang-github-pmezard-go-difflib (= 1.0.0-3), golang-github-prometheus-client-golang (= 1.14.0-3), golang-github-prometheus-client-model (= 0.3.0-3), golang-github-prometheus-common (= 0.39.0-2), golang-github-prometheus-procfs (= 0.8.0-3), golang-github-rivo-uniseg (= 0.4.2-1), golang-github-soheilhy-cmux (= 0.1.5-2), golang-github-spf13-cobra (= 1.6.1-1), golang-github-spf13-pflag (= 1.0.6~git20210604-d5e0c0615ace-1), golang-github-tmc-grpc-websocket-proxy (= 0.0~git20200427.3cfed13-3), golang-github-urfave-cli (= 1.22.9-2), golang-github-xiang90-probing (= 0.0.2-2), golang-go.crypto (= 1:0.4.0-1), golang-go.uber-atomic (= 1.10.0-2), golang-go.uber-multierr (= 1.6.0-1), golang-go.uber-zap (= 1.23.0-1), golang-gogoprotobuf (= 1.3.2-3), golang-golang-x-net (= 1:0.7.0+dfsg-1+ci202404171733+astra2), golang-golang-x-sys (= 0.3.0-1), golang-golang-x-text (= 0.7.0-1), golang-golang-x-time (= 0.3.0-1), golang-google-genproto (= 0.0~git20200413.b5235f6-3), golang-google-grpc (= 1.33.3-2), golang-google-protobuf (= 1.28.1-3), golang-gopkg-cheggaaa-pb.v1 (= 1.0.25-1), golang-k8s-sigs-yaml (= 1.3.0-1), golang-logrus (= 1.9.0-1), golang-protobuf-extensions (= 1.0.1-3), golang-yaml.v2 (= 2.4.0-4)
+Priority: optional
+Section: net
+Source: etcd
+Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
+Installed-Size: 24098
+Pre-Depends: init-system-helpers (>= 1.54~)
+Depends: adduser, libc6 (>= 2.3.4)
+Suggests: etcd-client
+Filename: ./etcd-server_3.4.23-4+ci202403051547+astra1_amd64.deb
+Size: 8441732
+MD5sum: eb31e3b2dba95c3e4fb50d1ed775aa8a
+SHA1: c1bdddf04f7db2cbbcdd093f5438bec4dd3886ad
+SHA256: f405076cd07416a4c1ffdefacf59a1b4e5f357aadb67ff5989537ef3f202e6f9
+SHA512: 2ff5d6c7cd1ed7270d9a84f2af1d1201e0fe8ee2542b6a91bd1467ed39b4ff88c9f4942dadca74fa96d6b32169bd8c18b2faf58380512a9cfecb36a2ede43ae1
+Homepage: https://etcd.io
+Description: highly-available key value store -- daemon
+ A highly-available key value store for shared configuration and service
+ discovery. etcd is inspired by zookeeper and doozer, with a focus on:
+ .
+  * Simple: curl'able user facing API (HTTP+JSON)
+  * Secure: optional SSL client cert authentication
+  * Fast: benchmarked 1000s of writes/s per instance
+  * Reliable: Properly distributed using Raft
+ .
+ Etcd uses the Raft consensus algorithm to manage a highly-available replicated
+ log.
+ .
+ This package contains the server binaries.
+Unsigned-SHA1: cd2c5e4d43500690f46bcc867d7d73e6466be303
+
+Package: haproxy
+Architecture: amd64
+Version: 2.2.32-5astra14+b1
+Priority: optional
+Section: net
+Source: haproxy (2.2.32-5astra14)
+Maintainer: Debian HAProxy Maintainers <team+haproxy@tracker.debian.org>
+Installed-Size: 3755
+Pre-Depends: dpkg (>= 1.17.14), init-system-helpers (>= 1.54~)
+Depends: libc6 (>= 2.16), liblua5.3-0, libparsec-base3, libparsec-cap3, libpcre2-8-0 (>= 10.32), libpdp, libssl1.1 (>= 1.1.1), libsystemd0, zlib1g (>= 1:1.1.4), adduser, lsb-base (>= 3.0-6), libparsec-mac2 | libparsec-mac3
+Suggests: vim-haproxy, haproxy-doc
+Filename: ./haproxy_2.2.32-5astra14+b1_amd64.deb
+Size: 1916852
+MD5sum: 09bea564898f6a413a3e39b52555e9bd
+SHA1: 84c9011f25ddc6994ceb17edb87407b517a150bf
+SHA256: 235e7ea4cb9c101ea2b5ef50f1489e7ef25dad34702830048b2705c81f5b78fa
+SHA512: 82a45ebb7ac35065f4db31df7bcd8674f7844d3c620e01ef79287c7f2a91d2ee1ec893891a26c0992b5799d42ced1ecdbce8eb7a1d7a4f301aa105473da9fbd1
+Homepage: http://www.haproxy.org/
+Description: fast and reliable load balancing reverse proxy
+ HAProxy is a TCP/HTTP reverse proxy which is particularly suited for high
+ availability environments. It features connection persistence through HTTP
+ cookies, load balancing, header addition, modification, deletion both ways. It
+ has request blocking capabilities and provides interface to display server
+ status.
+Unsigned-SHA1: cb8b7ebc358ae2055a42c5d68c3334d305ee2803
+
+Package: ipvsadm
+Architecture: amd64
+Version: 1:1.29-1
+Priority: optional
+Section: net
+Maintainer: Alexander Wirt <formorer@debian.org>
+Installed-Size: 118
+Depends: lsb-base (>= 3.0-6), libc6 (>= 2.14), libnl-3-200 (>= 3.2.7), libnl-genl-3-200 (>= 3.2.7), libpopt0 (>= 1.14)
+Suggests: heartbeat, keepalived, ldirectord
+Conflicts: lvs
+Replaces: lvs
+Filename: ./ipvsadm_1%3a1.29-1_amd64.deb
+Size: 38672
+MD5sum: 22a2cfc2fb162c43d6a60137e8d5b89e
+SHA1: c4794b51adbfbc4f5fd07cbf034609f53bdbe17e
+SHA256: 599ed3396222f097218a7b66b6b5e03e7b66a93c433f521341097c6891c39b9a
+SHA512: 947a4271d3017d862e474ab3f0606bf4475d87c5b8a84110b783378696d15351900d8a10028439fc5a59f21b5b77753e3020c798d470e7ca9aa903d1b846cc35
+Homepage: https://git.kernel.org/pub/scm/utils/kernel/ipvsadm/ipvsadm.git
+Description: Linux Virtual Server support programs
+ The Linux Virtual Server (lvs or IPVS) is a highly scalable and highly
+ available server built on a cluster of real servers. The architecture of the
+ cluster is transparent to end users, and the users see only a single virtual
+ server.
+ .
+ This package provides some support programs necessary to implement a virtual
+ server under Linux. With the addition of the mon and heartbeat packages it is
+ possible to implement a complete high-availability solution for Linux.
+
+Package: keepalived
+Architecture: amd64
+Version: 1:2.2.7-1+b3
+Priority: optional
+Section: admin
+Source: keepalived (1:2.2.7-1)
+Maintainer: Vincent Bernat <bernat@debian.org>
+Installed-Size: 1360
+Pre-Depends: init-system-helpers (>= 1.54~)
+Depends: iproute2, libc6 (>= 2.27), libglib2.0-0 (>= 2.26.0), libmnl0 (>= 1.0.3-4~), libnftnl11 (>= 1.1.2), libnl-3-200 (>= 3.2.27), libnl-genl-3-200 (>= 3.2.7), libpcre2-8-0 (>= 10.32), libsnmp40 (>= 5.9+dfsg), libssl1.1 (>= 1.1.0), libsystemd0
+Recommends: ipvsadm
+Filename: ./keepalived_1%3a2.2.7-1+b3_amd64.deb
+Size: 565420
+MD5sum: 99368029bbee1df798051861f9d12542
+SHA1: 502d72889812b0ae780584fedb574d59b649fd93
+SHA256: cf314cc9b2fc2062ac9b8b96abbdab0a20a2a6a07a8356ced1fe5da2a8394b5c
+SHA512: f69cdad4e265580a1af05d0daf1ce65c1ebd7f17e121f884b1b61528bce9227097d710bcb74fd32990eb5380df76c3f6d9f9810a387d85272a77b85e9fc34180
+Homepage: http://keepalived.org
+Description: Failover and monitoring daemon for LVS clusters
+ keepalived is used for monitoring real servers within a Linux
+ Virtual Server (LVS) cluster.  keepalived can be configured to
+ remove real servers from the cluster pool if it stops responding,
+ as well as send a notification email to make the admin aware of
+ the service failure.
+ .
+ In addition, keepalived implements an independent Virtual Router
+ Redundancy Protocol (VRRPv2; see RFC 2338 for additional info)
+ framework for director failover.
+Unsigned-SHA1: 7f1a93eeebfd0ec01fa7fd61f23474699048a3b0
+
+Package: liblua5.3-0
+Architecture: amd64
+Version: 5.3.6-2+ci202411111422+astra1
+Multi-Arch: same
+Priority: optional
+Section: libs
+Source: lua5.3
+Maintainer: Debian Lua Team <pkg-lua-devel@lists.alioth.debian.org>
+Installed-Size: 483
+Depends: libc6 (>= 2.14), libgcc1 (>= 1:3.0), libstdc++6 (>= 4.1.1)
+Filename: ./liblua5.3-0_5.3.6-2+ci202411111422+astra1_amd64.deb
+Size: 120256
+MD5sum: f0433009a54b1b564494898851f452a2
+SHA1: 9e434964b444f71051bd4aea7bd018c47e76e123
+SHA256: ffa675efed0d507fd9722b0fb31a057cb2f640b835031a54f21251a4fb50a94a
+SHA512: 3c89d9e8e8c6c723b425caebaab39abfc9ad66581d42e013a94569497beaea8d5e4cb1f024a674e9d07b23266492c3596341e3f2233fc3038492ccfcef5ba367
+Homepage: https://www.lua.org
+Description: Shared library for the Lua interpreter version 5.3
+ Lua is a powerful, light-weight programming language designed for extending
+ applications.  The language engine is accessible as a library, having a C
+ API which allows the application to exchange data with Lua programs and also
+ to extend Lua with C functions.  Lua is also used as a general-purpose,
+ stand-alone language through the simple command line interpreter provided.
+ .
+ This package contains runtime libraries.  You shouldn't need to install it
+ explicitly.
+Unsigned-SHA1: 3a3f4cf3545666037b70eb03c3ae5922faa1ff9b
+
+Package: libpq5
+Architecture: amd64
+Version: 1:11.22-astra.se5.1+ci3
+Multi-Arch: same
+Priority: optional
+Section: libs
+Source: postgresql-11
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 756
+Depends: libc6 (>= 2.14), libgost, libgssapi-krb5-2 (>= 1.17), libldap-2.4-2 (>= 2.4.7), libssl1.1 (>= 1.1.1)
+Breaks: libecpg-compat3 (>> 1:11.22-astra.se5.1+ci3), libecpg6 (>> 1:11.22-astra.se5.1+ci3)
+Filename: ./libpq5_1%3a11.22-astra.se5.1+ci3_amd64.deb
+Size: 169752
+MD5sum: 1ea9443d11046b0acc7a4acaace8fbee
+SHA1: 5e7fb6492f836a003bc0e63a45be129f54c88678
+SHA256: ecea13baed2fba142a2c6621eb68af75371c985e8c03672ea3b53cedcd805e17
+SHA512: 59d7771376fce41920996fe5f5195092325561178dead9962abccf5baddb6bd8f4a434614c24a93dcb6ff88eaddd09730635c968d41a794f4b1c7ac04239a34d
+Homepage: http://www.postgresql.org/
+Description: PostgreSQL C client library
+ libpq is a C library that enables user programs to communicate with
+ the PostgreSQL database server.  The server can be on another machine
+ and accessed through TCP/IP.  This version of libpq is compatible
+ with servers from PostgreSQL 8.2 or later.
+ .
+ This package contains the run-time library, needed by packages using
+ libpq.
+ .
+ PostgreSQL is an object-relational SQL database management system.
+Unsigned-SHA1: eb9d1f01707b65a32c0112deba6ea5e41d369939
+
+Package: libxslt1.1
+Architecture: amd64
+Version: 1.1.35-1+ci202411111433+astra1
+Multi-Arch: same
+Priority: optional
+Section: libs
+Source: libxslt
+Maintainer: Debian XML/SGML Group <debian-xml-sgml-pkgs@lists.alioth.debian.org>
+Installed-Size: 489
+Depends: libc6 (>= 2.17), libgcrypt20 (>= 1.8.0), libxml2 (>= 2.9.0)
+Filename: ./libxslt1.1_1.1.35-1+ci202411111433+astra1_amd64.deb
+Size: 229372
+MD5sum: d11575cb4db3c500ceb67f4790d0f2f8
+SHA1: e452067780eb2834e911e9fa34b3cacee7ec649f
+SHA256: 69bcfe909bbc774ab6389a3663df55b6c7db5cb4592b275b8938ee9b7ec0e73a
+SHA512: aebbb591d7d923c673e57aa93b00e07fc07a63fb9e8b90375d96802be5304bf72ee97e6c96d31b9095c2829b5628f326b691fb538557e23b53ef15796544e37b
+Homepage: https://gitlab.gnome.org/GNOME/libxslt/-/wikis/home
+Description: XSLT 1.0 processing library - runtime library
+ XSLT is an XML language for defining transformations of XML files from
+ XML to some other arbitrary format, such as XML, HTML, plain text, etc.
+ using standard XSLT stylesheets. libxslt is a C library which
+ implements XSLT version 1.0.
+ .
+ This package contains the libxslt library used by applications for XSLT
+ transformations.
+Unsigned-SHA1: 6a4922e91142d223d810842c076fbd353c1748ea
+
+Package: patroni
+Architecture: all
+Version: 3.3.4-1
+Priority: optional
+Section: database
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 1412
+Depends: python3-cdiff, python3-click (>= 4.1), python3-dateutil, python3-pkg-resources, python3-prettytable (>= 0.7), python3-psutil, python3-urllib3, python3-yaml, python3:any, python3-psycopg2, python3-etcd (>= 0.4.3) | python3-consul (>= 0.7.0) | python3-kazoo | python3-kubernetes | python3-pysyncobj
+Recommends: iproute2
+Suggests: postgresql, etcd-server | consul | zookeeperd, vip-manager, haproxy, patroni-doc
+Filename: ./patroni_3.3.4-1_all.deb
+Size: 265332
+MD5sum: 8d00604d082cd1a4a69a90d56980caeb
+SHA1: 5ae08ce073cf9374671ffb7dbf1d070ea64d5290
+SHA256: 9e71aa2c76d48a34ae709032f199e7153c441d9f8c61e5de42c1e4c2f6de9716
+SHA512: 8f5667c19714d64308e01706f65366c4017e4adbe46a8c07d83c14f2463ca8c3a7e3dc0b0a4d7ba502e7ef0c19580d2f5aa4d9c3afd83b06a3447d08de0bd672
+Homepage: https://github.com/zalando/patroni
+Description: PostgreSQL High Availability with ZooKeeper, etcd, Consul, or Kubernetes
+ Patroni is a template for a customized, high-availability PostgreSQL solution
+ using Python and a distributed configuration store (ZooKeeper, etcd or
+ Consul), or Kubernetes. It provides a REST API on each Postgres node of the
+ cluster allowing for remote management and monitoring.
+
+Package: postgresql-11
+Architecture: amd64
+Version: 1:11.22-astra.se5.1+ci3
+Priority: optional
+Section: database
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 46962
+Provides: postgresql-contrib-11
+Depends: locales | locales-all, postgresql-client-11, postgresql-common (>= 194~), ssl-cert, tzdata, debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.17), libcom-err2 (>= 1.43.9), libgcc1 (>= 1:3.0), libgost, libgssapi-krb5-2 (>= 1.14+dfsg), libicu63 (>= 63.1-1~), libkrb5-3 (>= 1.13~alpha1+dfsg), libldap-2.4-2 (>= 2.4.7), libllvm11 (>= 1:9~svn298832-1~), libpam0g (>= 0.99.7.1), libparsec-base3, libparsec-cap3, libpdp, libpq5 (>= 9.3~), libssl1.1 (>= 1.1.1), libstdc++6 (>= 5.2), libsystemd0, libuuid1 (>= 2.16), libxml2 (>= 2.7.4), libxslt1.1 (>= 1.1.25), zlib1g (>= 1:1.1.4)
+Recommends: sysstat
+Breaks: postgresql-11-citus (<< 8.0.0.PGDG-2~), postgresql-11-cron (<< 1.1.3-2~), postgresql-11-pgextwlist (<< 1.8-2~), postgresql-11-pglogical (<< 2.2.1-4~), postgresql-11-plsh (<< 1.20171014-3~), postgresql-11-rum (<< 1.3.2-4~), postgresql-11-wal2json (<< 1.0-5~)
+Filename: ./postgresql-11_1%3a11.22-astra.se5.1+ci3_amd64.deb
+Size: 14655436
+MD5sum: 9dae61248a881558fa84dc30766a71e5
+SHA1: ac9c95a4233404cb48afe4a97ea67ec76466b30f
+SHA256: 2c8c9109c1774ca05523419acffddbcdea05600cb5899c9cb951bc31b02ff8b3
+SHA512: 0d3029acd4e20b3b59e097b029d582ce8abb49ea286392b39aa82eb710d26ac4c817a3b2023e97587bc2377269c209749585635a990f0f8951fe465374f77be6
+Homepage: http://www.postgresql.org/
+Description: object-relational SQL database, version 11 server
+ PostgreSQL is a powerful, open source object-relational database
+ system. It is fully ACID compliant, has full support for foreign
+ keys, joins, views, triggers, and stored procedures (in multiple
+ languages). It includes most SQL:2008 data types, including INTEGER,
+ NUMERIC, BOOLEAN, CHAR, VARCHAR, DATE, INTERVAL, and TIMESTAMP. It
+ also supports storage of binary large objects, including pictures,
+ sounds, or video. It has native programming interfaces for C/C++,
+ Java, .Net, Perl, Python, Ruby, Tcl, ODBC, among others, and
+ exceptional documentation.
+ .
+ This package provides the database server for PostgreSQL 11.
+Postgresql-Catversion: 201809051
+Unsigned-SHA1: c815eb29d18b6f3a69e68a149701e77c067c9fee
+
+Package: postgresql-client-11
+Architecture: amd64
+Version: 1:11.22-astra.se5.1+ci3
+Multi-Arch: foreign
+Priority: optional
+Section: database
+Source: postgresql-11
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 6073
+Provides: postgresql-client
+Depends: libpq5 (= 1:11.22-astra.se5.1+ci3), postgresql-client-common (>= 182~), sensible-utils, libc6 (>= 2.15), libedit2 (>= 3.1-20180525-0), libparsec-base3, libpdp, zlib1g (>= 1:1.1.4)
+Suggests: postgresql-11, postgresql-doc-11
+Filename: ./postgresql-client-11_1%3a11.22-astra.se5.1+ci3_amd64.deb
+Size: 1410648
+MD5sum: cffd649b4e3fd232fae285a34cf6fc10
+SHA1: 0cfb08d9f1c93bef89c55c8c556031170f4f4b02
+SHA256: e2fb366b1dcce305313f966bb5bf381423524a2956d92b194b9534679b1833e2
+SHA512: 2d56577415ae6bda25a53fd6ba9b1cf5b72af058ea374976e5ed349d9f5d224dce9d978deda306320a8fa1c08cdd0cc363951034837f9a21f930957b67d800eb
+Homepage: http://www.postgresql.org/
+Description: front-end programs for PostgreSQL 11
+ This package contains client and administrative programs for
+ PostgreSQL: these are the interactive terminal client psql and
+ programs for creating and removing users and databases.
+ .
+ This is the client package for PostgreSQL 11. If you install
+ PostgreSQL 11 on a standalone machine, you need the server package
+ postgresql-11, too. On a network, you can install this package on
+ many client machines, while the server package may be installed on
+ only one machine.
+ .
+ PostgreSQL is an object-relational SQL database management system.
+Unsigned-SHA1: 748a4540d0e7aabe711659f6dfc945753d818b74
+
+Package: postgresql-client-common
+Architecture: all
+Version: 225astra3
+Multi-Arch: foreign
+Priority: optional
+Section: database
+Source: postgresql-common
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 192
+Depends: netbase
+Recommends: libreadline7
+Filename: ./postgresql-client-common_225astra3_all.deb
+Size: 91180
+MD5sum: 8c597d9e17309361084c88a9a76559d6
+SHA1: 2a7ca81c9ece038426e4fbc1002e7486155fc1f0
+SHA256: c4a2c447a62faaabd470eaeb4299d29ece5d517e97daad2a6a91aea251267599
+SHA512: 63ddf12a39f295075a77a888de95d446263f224d1097bb4e135c1d367be5daecdc276450554ca9a6231f2896741aec398a9af809ac78226466f7337f006f7d93
+Description: manager for multiple PostgreSQL client versions
+ The postgresql-client-common package provides a structure under which
+ multiple versions of PostgreSQL client programs may be installed at
+ the same time. It provides a wrapper which selects the right version
+ for the particular cluster you want to access (with a command line
+ option, an environment variable, /etc/postgresql-common/user_clusters,
+ or ~/.postgresqlrc).
+ .
+ PostgreSQL is a fully featured object-relational database management
+ system. It supports a large part of the SQL standard and is designed
+ to be extensible by users in many aspects. Its features include ACID
+ transactions, foreign keys, views, sequences, subqueries, triggers,
+ outer joins, multiversion concurrency control, and user-defined types
+ and functions.
+
+Package: postgresql-common
+Architecture: all
+Version: 225astra3
+Multi-Arch: foreign
+Priority: optional
+Section: database
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 636
+Depends: adduser, debconf (>= 0.5.00) | debconf-2.0, lsb-base (>= 3.0-3), perl (>= 5.14), postgresql-client-common (= 225astra3), ssl-cert (>= 1.0.11), ucf
+Recommends: e2fsprogs, logrotate
+Suggests: libjson-perl
+Breaks: postgresql-9.1 (<< 9.1.1-3~), postgresql-server-dev-all (<< 204), systemd (<< 204)
+Replaces: postgresql-server-dev-all (<< 204)
+Filename: ./postgresql-common_225astra3_all.deb
+Size: 237920
+MD5sum: 796a79bb23cdcad84933e65e1e151fa9
+SHA1: 8f1996e70b5a0f146d8c508e0baf4f260a2589da
+SHA256: 0b16700bd4666c59ce440c4f8763cdb89fd04ebacc1f17d020ac8aa2a7146b14
+SHA512: 3f23acf2b5d63de523ea6142925ddce46695742858620e9bbca1b343fa86ad49f4a29382089504f23c106a100024f452b5f14dfa21a18ee922b84286a65ccd1c
+Description: PostgreSQL database-cluster manager
+ The postgresql-common package provides a structure under which
+ multiple versions of PostgreSQL may be installed and/or multiple
+ clusters maintained at one time.
+ .
+ The commands provided are pg_conftool, pg_createcluster, pg_ctlcluster,
+ pg_dropcluster, pg_lsclusters, pg_renamecluster, pg_upgradecluster,
+ pg_virtualenv.
+ .
+ PostgreSQL is a fully featured object-relational database management
+ system. It supports a large part of the SQL standard and is designed
+ to be extensible by users in many aspects. Its features include ACID
+ transactions, foreign keys, views, sequences, subqueries, triggers,
+ outer joins, multiversion concurrency control, and user-defined types
+ and functions.
+
+Package: postgresql
+Architecture: all
+Version: 11+225astra3
+Priority: optional
+Section: database
+Source: postgresql-common (225astra3)
+Maintainer: Debian PostgreSQL Maintainers <team+postgresql@tracker.debian.org>
+Installed-Size: 68
+Depends: postgresql-11
+Suggests: postgresql-doc
+Filename: ./postgresql_11+225astra3_all.deb
+Size: 64848
+MD5sum: 4cc87ac4f09da81f6067bbe047797c9c
+SHA1: 9d33fd50e778b99fad9adeb53cef5e3b0cd2155e
+SHA256: b08efd6049ef0f0f173fd1d0b4638a8b0f9a4a79b8a48105636246db1b630afb
+SHA512: 148e15c0ccd410506cf2e53d1a41d1e75142bb21608fbb2739433f711c6696b4bbca2bb181b22dd24022d320abbc64342a0225f7dc035f967797b8bb4eb4e6e4
+Description: object-relational SQL database (supported version)
+ This metapackage always depends on the currently supported PostgreSQL
+ database server version.
+ .
+ PostgreSQL is a fully featured object-relational database management
+ system.  It supports a large part of the SQL standard and is designed
+ to be extensible by users in many aspects.  Some of the features are:
+ ACID transactions, foreign keys, views, sequences, subqueries,
+ triggers, user-defined types and functions, outer joins, multiversion
+ concurrency control.  Graphical user interfaces and bindings for many
+ programming languages are available as well.
+
+Package: python-asn1crypto
+Architecture: all
+Version: 0.24.0-1+b2
+Priority: optional
+Section: python
+Source: asn1crypto (0.24.0-1)
+Maintainer: Tristan Seligmann <mithrandi@debian.org>
+Installed-Size: 500
+Depends: python:any (<< 2.8), python:any (>= 2.7~)
+Filename: ./python-asn1crypto_0.24.0-1+b2_all.deb
+Size: 78352
+MD5sum: d4197fd5a354c3608a67a79e72faf082
+SHA1: ad63f74ce1aff3690cc2abe63691eb2ab21541a1
+SHA256: 83b9bb34b46615ffe023e3794fbbe2667bc82b445afcb694b75c54c174391f21
+SHA512: 037681827cd3aad826af7704fe21f7cf86cb51856f0f957bd13262ca38e9073a9cd9d780f9c3f7585a9f035ddfbd4111d07b4b906b27d65bf94783586a46c1e4
+Homepage: https://github.com/wbond/asn1crypto
+Description: Fast ASN.1 parser and serializer (Python 2)
+ asn1crypto focuses on:
+  - Delayed parsing of byte string values
+  - Persistence of original ASN.1 encoded data until a value is changed
+  - Lazy loading of child fields
+  - Utilization of high-level Python stdlib modules
+ .
+ This package contains the Python 2 version of asn1crypto.
+
+Package: python-cffi-backend
+Architecture: amd64
+Version: 1.12.2-1+b2
+Priority: optional
+Section: python
+Source: python-cffi (1.12.2-1)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 195
+Provides: python-cffi-backend-api-9729, python-cffi-backend-api-max (= 10495), python-cffi-backend-api-min (= 9729)
+Depends: python (<< 2.8), python (>= 2.7~), python:any (<< 2.8), python:any (>= 2.7~), libc6 (>= 2.14), libffi6 (>= 3.0.4)
+Breaks: python-cffi (<< 1)
+Replaces: python-cffi (<< 1)
+Filename: ./python-cffi-backend_1.12.2-1+b2_amd64.deb
+Size: 76616
+MD5sum: b885ea1f12e35935ad5d820bf9486b92
+SHA1: aa399a2a4c1aa42d9727715852f6d4f77cb39d87
+SHA256: 02d0b668d6767cd06458c17d535b4b58008fd4faaf6067c1825bd2b03d90cb15
+SHA512: 954feb03efdc8e9d354001cc8b3e59d55417b251e93a93a160893aaec30349de862b4158b62bfa12dafc3c472dad76820fcf694714c8d31dc5b206e7a63991d5
+Homepage: http://cffi.readthedocs.org/
+Description: Foreign Function Interface for Python calling C code - backend
+ Convenient and reliable way of calling C code from Python.
+ .
+ The aim of this project is to provide a convenient and reliable way of calling
+ C code from Python. It keeps Python logic in Python, and minimises the C
+ required. It is able to work at either the C API or ABI level, unlike most
+ other approaches, that only support the ABI level.
+ .
+ This package contains the runtime support for pre-built cffi modules.
+Unsigned-SHA1: 91f4635fcb4ede6692c674bf459136ea1f7bd042
+
+Package: python-cryptography
+Architecture: amd64
+Version: 2.6.1-3+deb10u4+ci202409091506+astra1
+Priority: optional
+Section: python
+Maintainer: Tristan Seligmann <mithrandi@debian.org>
+Installed-Size: 1414
+Depends: python (<< 2.8), python (>= 2.7~), python-asn1crypto, python-cffi-backend-api-min (<= 9729), python-cffi-backend-api-max (>= 9729), python-enum34, python-ipaddress, python-six (>= 1.4.1), python:any (<< 2.8), python:any (>= 2.7~), libc6 (>= 2.14), libssl1.1 (>= 1.1.1)
+Suggests: python-cryptography-doc, python-cryptography-vectors
+Breaks: python-openssl (<< 16.0.0)
+Filename: ./python-cryptography_2.6.1-3+deb10u4+ci202409091506+astra1_amd64.deb
+Size: 216116
+MD5sum: a86ff343ff31de0e36c8e3c9b9849a1c
+SHA1: 547e3f5b7cd822a0ac2b5ada9d42dc433720e85d
+SHA256: acd78726d0638b55f11f91fcce37ee1431cc82d8fe3667bc91602a884a2eace9
+SHA512: 59476238d1d66f1e67ec7efd2cdd0732221b4c5089364735a8ee615dd5b20e66dce354a42d81dde1702341182c4a72164fe8147f5b03627660bb4bdf8bc950a7
+Homepage: https://cryptography.io/
+Description: Python library exposing cryptographic recipes and primitives (Python 2)
+ The cryptography library is designed to be a "one-stop-shop" for
+ all your cryptographic needs in Python.
+ .
+ As an alternative to the libraries that came before it, cryptography
+ tries to address some of the issues with those libraries:
+  - Lack of PyPy and Python 3 support.
+  - Lack of maintenance.
+  - Use of poor implementations of algorithms (i.e. ones with known
+    side-channel attacks).
+  - Lack of high level, "Cryptography for humans", APIs.
+  - Absence of algorithms such as AES-GCM.
+  - Poor introspectability, and thus poor testability.
+  - Extremely error prone APIs, and bad defaults.
+ .
+ This package contains the Python 2 version of cryptography.
+Unsigned-SHA1: 09e1fe9e6f99dee498b3a59b487283f38f9b4aa3
+
+Package: python-dnspython
+Architecture: all
+Version: 1.16.0-1+deb10u1
+Priority: optional
+Section: python
+Source: dnspython
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 616
+Depends: python:any (<< 2.8), python:any (>= 2.7~)
+Filename: ./python-dnspython_1.16.0-1+deb10u1_all.deb
+Size: 88340
+MD5sum: 556ee4af1f63d1ea6c14656f4b287f9c
+SHA1: ce17d74f04dc315e174b59d33d2532eed674f9ca
+SHA256: 9b01eab9c14a237b9cc7041b88306a51cd2e370e259823582e917f997a183b2c
+SHA512: eea87a09d17a8f88a237dff5dd2e0135e11937b41604521e8a718d46bbb30436bbd5d3bf5fa99893027145c042c3cb2d25016eef33f67965ed085f6ba494d5ff
+Homepage: http://www.dnspython.org
+Description: DNS toolkit for Python
+ dnspython is a DNS toolkit for Python. It supports almost all record types. It
+ can be used for queries, zone transfers, and dynamic updates. It supports TSIG
+ authenticated messages and EDNS0.
+ .
+ dnspython provides both high and low level access to DNS. The high level
+ classes perform queries for data of a given name, type, and class, and return
+ an answer set. The low level classes allow direct manipulation of DNS zones,
+ messages, names, and records.
+
+Package: python-enum34
+Architecture: all
+Version: 1.1.6-2+b2
+Priority: optional
+Section: python
+Source: enum34 (1.1.6-2)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 218
+Depends: python:any (<< 2.8), python:any (>= 2.7~)
+Suggests: python-enum34-doc
+Breaks: python-enum
+Filename: ./python-enum34_1.1.6-2+b2_all.deb
+Size: 34592
+MD5sum: 73602072c2f3d2d66cdbd4eb0bb3a574
+SHA1: 4e7f0aa49956ae254ccf6c33876dfb67e2d4479b
+SHA256: f1f966e6cec7aee0eb07ec2494f78a7c812098cc03f7d5bcb8ea304bd5094021
+SHA512: 61dc26fdf07b7c5e1e08166b74842ef487a826a92a0f5aaed5da1df004d076456be88b1d73bb770ce1f774fb711baf8d6dbf5be7ec00ee634b5249191ed100e4
+Homepage: https://pypi.python.org/pypi/enum34
+Description: backport of Python 3.4's enum package
+ PEP 435 adds an enumeration to Python 3.4.  This module provides a
+ backport of that data type for older Python versions.  It defines two
+ enumeration classes that can be used to define unit sets of names and
+ values: Enum and IntEnum.
+ .
+ This is the Python 2 compatible package.
+
+Package: python-etcd
+Architecture: all
+Version: 0.4.5-1+b2
+Priority: optional
+Section: python
+Source: python-etcd (0.4.5-1)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 182
+Depends: python-dnspython, python-urllib3, python:any (<< 2.8), python:any (>= 2.7~)
+Suggests: etcd
+Filename: ./python-etcd_0.4.5-1+b2_all.deb
+Size: 31700
+MD5sum: d5e5ff4787f8d74ed357a32ac4e21975
+SHA1: 1344fa7281c3dee1ac9ece1fc53223b2e4da127c
+SHA256: fc5d6356ac516637e582f8060016167405cb46f85e8d60a56e093e152c3d2336
+SHA512: 2d83f2e0c91a322a36853a0fdf15f9175bce3d1560078e2ade8c55923d135bce4f24afdb731396fc1b80fcacdf9cc9fc5f5db2b656cec5d7746cbe9ed6526d1d
+Homepage: https://github.com/jplana/python-etcd
+Description: Python Etcd client library
+ Client library for accessing and manipulating etcd contents.
+ .
+ This package contains the module built for Python version 2.x.
+
+Package: python-idna
+Architecture: all
+Version: 2.6-1+deb10u1+b1
+Priority: optional
+Section: python
+Source: python-idna (2.6-1+deb10u1)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 293
+Depends: python:any (<< 2.8), python:any (>= 2.7~)
+Filename: ./python-idna_2.6-1+deb10u1+b1_all.deb
+Size: 35488
+MD5sum: 7515481404ff40b6f82b57f1c3509e0e
+SHA1: 9f4e00fb76313f7811daead9f689ffda2c67a01c
+SHA256: 9cd8838e5845a3396c8ab00ed3f16ba7c5140e2328a6307ae16af20e5ceb8a52
+SHA512: 64fd97d52e2824a85b3190454308eabf27374b9aef1a1f98de19d93df1e1aed2abffeac853aa597d551e00fca3a1eecf17c34d08be30c70209ce9bdecb8b1498
+Homepage: https://github.com/kjd/idna
+Description: Python IDNA2008 (RFC 5891) handling (Python 2)
+ A library to support the Internationalised Domain Names in Applications (IDNA)
+ protocol as specified in RFC 5891. This version of the protocol is often
+ referred to as “IDNA2008” and can produce different results from the earlier
+ standard from 2003.
+ .
+ The library is also intended to act as a suitable drop-in replacement for the
+ “encodings.idna” module that comes with the Python standard library but
+ currently only supports the older 2003 specification.
+ .
+ This package contains the module for Python 2.
+
+Package: python-ipaddress
+Architecture: all
+Version: 1.0.17-1+deb10u1+b2
+Priority: optional
+Section: python
+Source: python-ipaddress (1.0.17-1+deb10u1)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 102
+Depends: python:any (<< 2.8), python:any (>= 2.7~)
+Filename: ./python-ipaddress_1.0.17-1+deb10u1+b2_all.deb
+Size: 18788
+MD5sum: a18276b8872e643050155f3659c06b6b
+SHA1: 1d7a253171fad9d51f141c4e63420fea9fbc1f68
+SHA256: 94b6b38cd24cbc1dadbc7e171ac950e84df8a1744bd0d6b72673fb40fc58e44e
+SHA512: 6024ffb958f0e9861254d7d114f62588315b0554d97cd883b659a8b94a1ccc6085ee2e170c1bdcbd2f9f80c0c8b486e2fc1d20cabac2e069222ae20587d33148
+Homepage: https://github.com/phihag/ipaddress
+Description: Backport of Python 3 ipaddress module (Python 2)
+ This module is a backport of the stdlib "ipaddress" module from Python 3. The
+ "ipaddress" module is in turn based off of the "ipaddr" module available in
+ the "python-ipaddr" but there are some important API differences; make sure
+ you are using the right module.
+ .
+ This package contains the Python 2 module.
+
+Package: python-openssl
+Architecture: all
+Version: 19.0.0-1+b1
+Priority: optional
+Section: python
+Source: pyopenssl (19.0.0-1)
+Maintainer: Sandro Tosi <morph@debian.org>
+Installed-Size: 229
+Depends: python-cryptography (>= 2.3), python-six (>= 1.5.2), python:any (<< 2.8), python:any (>= 2.7~)
+Suggests: python-openssl-doc, python-openssl-dbg
+Filename: ./python-openssl_19.0.0-1+b1_all.deb
+Size: 47016
+MD5sum: 47548daad3844ce733ae2163b84890bc
+SHA1: f2c9827a542c2164a00585cf63168ec043b57129
+SHA256: 907e5c6fddf20276ba878457937c0f3dadc4e309c55c867710b0724cf18c2a7f
+SHA512: d9d590f6bd76d3fc2c43a2ac8750e7dfb18b82d0b5c33803a78d1638b38c441af088b44ca3828a514dde514ecd4dce3a92001bf5b80f9464f46d4fdc90fafef2
+Homepage: https://pyopenssl.org/
+Description: Python 2 wrapper around the OpenSSL library
+ High-level wrapper around a subset of the OpenSSL library, includes
+ .
+   * SSL.Connection objects, wrapping the methods of Python's portable
+     sockets
+   * Callbacks written in Python
+   * Extensive error-handling mechanism, mirroring OpenSSL's error
+     codes
+ .
+ A lot of the object methods do nothing more than calling a
+ corresponding function in the OpenSSL library.
+
+Package: python-urllib3
+Architecture: all
+Version: 1.25.8-2+ubuntu0.4+astra3+ci1
+Priority: optional
+Section: python
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 708
+Depends: python-six
+Recommends: ca-certificates, python-cryptography, python-idna, python-ipaddress, python-openssl
+Suggests: python-ntlm, python-socks
+Filename: ./python-urllib3_1.25.8-2+ubuntu0.4+astra3+ci1_all.deb
+Size: 157580
+MD5sum: 2b9fca5db5ee81e4a1b73d145dd30d5d
+SHA1: dbcf5bf5b7789293c0411c04115ed00a5a630a22
+SHA256: 2b33b5833e8a247aa24f6a8f14510dc0bd4c7902e9da4b26adef2a2d955e9287
+SHA512: f37ed85a6d70ddf438d9fed18ba160bc32f8c2dee5b2de7559e48f94d9be092b3874d1458499e699094f4751f9e04e307fcfa9a5aadbe888a087ebd6f27d6b3c
+Homepage: https://urllib3.readthedocs.org
+Description: HTTP library with thread-safe connection pooling for Python
+ urllib3 supports features left out of urllib and urllib2 libraries.
+ .
+   - Re-use the same socket connection for multiple requests (HTTPConnectionPool
+     and HTTPSConnectionPool) (with optional client-side certificate
+     verification).
+   - File posting (encode_multipart_formdata).
+   - Built-in redirection and retries (optional).
+   - Supports gzip and deflate decoding.
+   - Thread-safe and sanity-safe.
+   - Small and easy to understand codebase perfect for extending and
+     building upon.
+
+Package: python3-cdiff
+Architecture: all
+Version: 1.0-1
+Priority: optional
+Section: python
+Source: cdiff
+Maintainer: Michael Banck <mbanck@debian.org>
+Installed-Size: 59
+Depends: python3:any
+Filename: ./python3-cdiff_1.0-1_all.deb
+Size: 15212
+MD5sum: 28fc99491a62b4906297003d65e76663
+SHA1: 96cfd076f8e76f5d3e72d462eb0831c4f90ee614
+SHA256: bfa41bad47e4664d0ec06002a0d158db1e04380664afa2ccf331708815628d13
+SHA512: 8ce2f236b2cf505177b0a929fb9534fca72be8fc69bf4254226492081d74a43a15ac03a6553791e4bb9d6a23a7ea768ac983bdf760e25feef088e78a12bda88f
+Description: Colored, incremental diff with side by side and auto pager support (Python 3)
+ Cdiff is a python module to view colored, incremental diff in a Git/Mercurial/
+ Svn workspace or from stdin, with side by side and auto pager support.
+ .
+ This is the Python 3 version of the package.
+
+Package: python3-click
+Architecture: all
+Version: 7.0-1+b1
+Priority: optional
+Section: python
+Source: python-click (7.0-1)
+Maintainer: Alexandre Viau <aviau@debian.org>
+Installed-Size: 302
+Depends: python3:any, python3-colorama
+Filename: ./python3-click_7.0-1+b1_all.deb
+Size: 73152
+MD5sum: f0623ac11200865e0a5209eb22e0571c
+SHA1: 056fd51075f79bc1432435b7c34dc178d4978fab
+SHA256: 926bbd40fb8268354680174a1dd49221e920f1dd0488ef75b08de3dd7db356f2
+SHA512: cadb911f8baec6b6f42cf83c90211bf16c9888b48720d59d4fef54b8bd22a62563b198d3c626b01d78b900c1beb394130874af684c95d74853ee410aef24a449
+Homepage: https://github.com/pallets/click
+Description: Wrapper around optparse for command line utilities - Python 3.x
+ Click is a Python package for creating beautiful command line interfaces
+ in a composable way with as little code as necessary.  It's the "Command
+ Line Interface Creation Kit".  It's highly configurable but comes with
+ sensible defaults out of the box.
+ .
+ It aims to make the process of writing command line tools quick and fun
+ while also preventing any frustration caused by the inability to implement
+ an intended CLI API.
+ .
+ This is the Python 3 compatible package.
+
+Package: python3-colorama
+Architecture: all
+Version: 0.3.7-1+b1
+Priority: optional
+Section: python
+Source: python-colorama (0.3.7-1)
+Maintainer: Khalid El Fathi <khalid@elfathi.fr>
+Installed-Size: 69
+Depends: python3:any (>= 3.4~)
+Filename: ./python3-colorama_0.3.7-1+b1_all.deb
+Size: 17996
+MD5sum: 530d6f4cd90a990dac8beb0ff5bc7f71
+SHA1: 5f48899471bd8ee098b8f365f11653a0cd569fd5
+SHA256: 672e1ad66d94ada4fd24fed8b4c8ccc77014038014710937d8c51df6d28c4d01
+SHA512: 260078a8cef0af247a40390a6ac9a491be35b2c19c9e1d382142843d047ea4360b1f1ae026bbb682b69e6a4adce0c71380184031a08ebedeae8c539a26cbf9d4
+Homepage: http://pypi.python.org/pypi/colorama/
+Description: Cross-platform colored terminal text in Python - Python 3.x
+ Python-colorama provides a simple cross-platform API to print colored terminal
+ text from Python applications.
+ .
+ ANSI escape character sequences are commonly used to produce colored terminal
+ text on Unix. Colorama provides some shortcuts to generate these sequences.
+ .
+ This has the happy side-effect that existing applications or libraries which
+ already use ANSI sequences to produce colored output on Linux.
+ .
+ This package provides the module for Python 3.
+
+Package: python3-dnspython
+Architecture: all
+Version: 1.16.0-1+deb10u1
+Priority: optional
+Section: python
+Source: dnspython
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 616
+Depends: python3:any
+Filename: ./python3-dnspython_1.16.0-1+deb10u1_all.deb
+Size: 88436
+MD5sum: 923f7394a34e144ac357ddfad396e4af
+SHA1: 7258cd53ec3e9fdbf2a1497f08714c38ade19681
+SHA256: cd6705302e4d7be88f75793e28a833eb416b38e5599cdc74516e0c3ff958ae92
+SHA512: 73c3948473c769ddeac1e6b5c98bea4f8ce105e1396a85653c4528c96da22462b1c399b0441701df29dc7e6f500d96c034300a5488c1a79e1fc4c8bcd3140ca8
+Homepage: http://www.dnspython.org
+Description: DNS toolkit for Python 3
+ dnspython is a DNS toolkit for Python. It supports almost all record types. It
+ can be used for queries, zone transfers, and dynamic updates. It supports TSIG
+ authenticated messages and EDNS0.
+ .
+ dnspython provides both high and low level access to DNS. The high level
+ classes perform queries for data of a given name, type, and class, and return
+ an answer set. The low level classes allow direct manipulation of DNS zones,
+ messages, names, and records.
+ .
+ This is the Python 3 version.
+
+Package: python3-etcd
+Architecture: all
+Version: 0.4.5-1+b2
+Priority: optional
+Section: python
+Source: python-etcd (0.4.5-1)
+Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 182
+Depends: python3-dnspython, python3-urllib3, python3:any
+Suggests: etcd
+Filename: ./python3-etcd_0.4.5-1+b2_all.deb
+Size: 31796
+MD5sum: 787cacf387d99ef64d225f922ba65e0a
+SHA1: 4ce9620383455dc5b1ee109bed04620f9e2d595c
+SHA256: 178313d1e0d07635ba65ca3ebbc41212e6f34074f0180c5300ad057cd4714494
+SHA512: a329b01cf327a4d296d90935270de9634667dbad76533fcf0553d082f5643a8e953c3523e9d2dcf02bdb542f45b89be5a9133ddc7ee95cab329140a2fb49b0ab
+Homepage: https://github.com/jplana/python-etcd
+Description: Python Etcd client library - Python3 module
+ Client library for accessing and manipulating etcd contents.
+ .
+ This package contains the module built for Python version 3.x.
+
+Package: python3-prettytable
+Architecture: all
+Version: 0.7.2-4+b2
+Priority: optional
+Section: python
+Source: prettytable (0.7.2-4)
+Maintainer: Sandro Tosi <morph@debian.org>
+Installed-Size: 83
+Depends: python3:any
+Filename: ./python3-prettytable_0.7.2-4+b2_all.deb
+Size: 22748
+MD5sum: 5bda59f86b974116b702989813299697
+SHA1: 406221af7bc3c64a238f1cf7f82bdf88925d979e
+SHA256: 9483f97470fe112772e102fa97e24dddbe70e5109a44f327f766907ab7c233e5
+SHA512: 85ad40cafaaa6ca7993715ba97aec4499adbde8fd07493efcf45f4822543f149deb8f46f44a64292ef66ec078eff0e2b184e2efac1b452d644bcd0e0682f0cc4
+Homepage: https://github.com/lmaurits/prettytable
+Description: library to represent tabular data in visually appealing ASCII tables (Python3)
+ PrettyTable is a simple Python library designed to make it quick and
+ easy to represent tabular data in visually appealing ASCII tables. It
+ was inspired by the ASCII tables used in the PostgreSQL shell
+ psql. PrettyTable allows for selection of which columns are to be
+ printed, independent alignment of columns (left or right justified or
+ centred) and printing of "sub-tables" by specifying a row range.
+ .
+ This package contains the Python 3 version of prettytable.
+
+Package: python3-psycopg2
+Architecture: amd64
+Version: 2.8.6-2~bpo10+1+b2
+Priority: optional
+Section: python
+Source: psycopg2 (2.8.6-2~bpo10+1)
+Maintainer: Debian Python Team <team+python@tracker.debian.org>
+Installed-Size: 426
+Depends: python3 (<< 3.8), python3 (>= 3.7~), python3:any, libc6 (>= 2.15), libpq5 (>= 10~~)
+Suggests: python-psycopg2-doc
+Filename: ./python3-psycopg2_2.8.6-2~bpo10+1+b2_amd64.deb
+Size: 110632
+MD5sum: 760ae8b785e9800a335e0b770febcf81
+SHA1: 97c20bb1cdb24adcd4418948b9f259897c4d98b4
+SHA256: bd53c43b3ab00f4dfab1bcb86316ae2643a32b867a68b7c86cab43bb6147b5ac
+SHA512: a46d15d1215583d909f1499d098e77ed9891db876cf17e83f60108c4563b9de6714216aefac5042c587efc3f0fd8794e08b5480726ba4c76d94962d5f0691a88
+Homepage: http://initd.org/projects/psycopg
+Description: Python 3 module for PostgreSQL
+ psycopg is a PostgreSQL database adapter for the Python3 programming language
+ (just like pygresql and popy.) This is version 2, a complete rewrite of the
+ original code to provide new-style classes for connection and cursor objects
+ and other sweet candies. Like the original, psycopg 2 was written with the
+ aim of being very small and fast, and stable as a rock.
+ .
+ psycopg is different from the other database adapter because it was designed
+ for heavily multi-threaded applications that create and destroy lots of
+ cursors and make a conspicuous number of concurrent INSERTs or UPDATEs.
+ psycopg 2 also provides full asynchronous operations for the really brave
+ programmer.
+ .
+ The main advantages of psycopg2 are that it supports the full Python DBAPI-2.0
+ and being thread safe at level 2. It also includes some extensions to the
+ standard DBAPI-2.0 to allow for better thread performance.
+Unsigned-SHA1: 1c44594930be5e8318ec9a59a7b772b380889114
+
+Package: python3-urllib3
+Architecture: all
+Version: 1.25.8-2+ubuntu0.4+astra3+ci1
+Priority: optional
+Section: python
+Source: python-urllib3
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Debian Python Modules Team <python-modules-team@lists.alioth.debian.org>
+Installed-Size: 413
+Depends: python3:any, python3-six
+Recommends: ca-certificates
+Suggests: python3-cryptography, python3-idna, python3-openssl, python3-socks
+Filename: ./python3-urllib3_1.25.8-2+ubuntu0.4+astra3+ci1_all.deb
+Size: 101400
+MD5sum: 56cde71375f5d6e3b076d4e4adc0732b
+SHA1: 2c9850f75ed47afcc885e930eba1a928e2a5e4e7
+SHA256: 4f7e011afc8a2b69aa9ef308621a0e4264ad82b2ebf71fae332c3b1e78da61b8
+SHA512: 1acaff69f9bcd2d7c5f4a6ebf8bf8b2a52b79c87ef585e183be22dc81a97a90d0e9440f5bf51d7515ac38945686bbba3bdd06465d0aee78b78335a75513bf869
+Homepage: https://urllib3.readthedocs.org
+Description: HTTP library with thread-safe connection pooling for Python3
+ urllib3 supports features left out of urllib and urllib2 libraries.
+ .
+   - Re-use the same socket connection for multiple requests (HTTPConnectionPool
+     and HTTPSConnectionPool) (with optional client-side certificate
+     verification).
+   - File posting (encode_multipart_formdata).
+   - Built-in redirection and retries (optional).
+   - Supports gzip and deflate decoding.
+   - Thread-safe and sanity-safe.
+   - Small and easy to understand codebase perfect for extending and
+     building upon.
+ .
+ This package contains the Python 3 version of the library.
+
+Package: sysstat
+Architecture: amd64
+Version: 12.6.1-1+ubuntu1
+Priority: optional
+Section: admin
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Original-Maintainer: Robert Luberda <robert@debian.org>
+Installed-Size: 1716
+Depends: lsb-base (>= 3.0-6), ucf (>= 2.003), xz-utils, debconf (>= 0.5) | debconf-2.0, libc6 (>= 2.14), libsensors5 (>= 1:3.5.0)
+Recommends: systemd | cron | cron-daemon
+Suggests: isag
+Filename: ./sysstat_12.6.1-1+ubuntu1_amd64.deb
+Size: 570448
+MD5sum: 1ced59acf74e7023607e5da7ad104544
+SHA1: a9956c8b505f072dc32abbcdc1efd93d5393342b
+SHA256: 0e365612cd64f4eaf9590bd8bb9c023b3002f1d492a481298ee40a8602aa0d08
+SHA512: 06721c8be050b3df138aaced6c6f197e039c4b21b45ef5ba48d3b7c495cf3582f027cdf6676c684592ea7b76659162a7e63c86b9f1af55249c1d94a5322f16aa
+Homepage: http://sebastien.godard.pagesperso-orange.fr/
+Description: system performance tools for Linux
+ The sysstat package contains the following system performance tools:
+  - sar: collects and reports system activity information;
+  - iostat: reports CPU utilization and disk I/O statistics;
+  - tapestat: reports statistics for tapes connected to the system;
+  - mpstat: reports global and per-processor statistics;
+  - pidstat: reports statistics for Linux tasks (processes);
+  - sadf: displays data collected by sar in various formats;
+  - cifsiostat: reports I/O statistics for CIFS filesystems.
+ .
+ The statistics reported by sar deal with I/O transfer rates,
+ paging activity, process-related activities, interrupts,
+ network activity, memory and swap space utilization, CPU
+ utilization, kernel activities and TTY statistics, among
+ others. Both UP and SMP machines are fully supported.
+Unsigned-SHA1: c05ac1dba9c83086e155d13e874000f84751111a
+

@@ -1,0 +1,116 @@
+---
+- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - patroni
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
+
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - patroni
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
+
+
+- name: "Disabling Default PostgreSQL Service"
+  ansible.builtin.systemd:
+    name: postgresql-15.service
+    enabled: false
+    state: stopped
+
+- name: "Determine if / is on HDD or SSD"
+  ansible.builtin.shell: |
+    set -o pipefail
+    lsblk $(df --output=source,target | egrep '/$' | awk '{print $1}') -rno ROTA
+  register: patroni_fsroot_is_ssd
+  changed_when: false
+
+- name: "Getting pg_ctl Directory"
+  ansible.builtin.command: "find / -name pg_ctl -printf '%h\\n'"
+  register: patroni_pg_ctl
+  changed_when: false
+  ignore_errors: true
+  failed_when: patroni_pg_ctl.rc != 1
+
+- name: "Printing pg_ctl"
+  ansible.builtin.debug:
+    msg: '{{ patroni_pg_ctl.stdout_lines }}'
+
+- name: "Generate Patroni Environment Config From Template"
+  ansible.builtin.template:
+    src: "etc/profile.d/patroni-env.sh.j2"
+    dest: /etc/profile.d/patroni-env.sh
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "Creating Log Directory For Patroni"
+  ansible.builtin.file:
+    path: /var/log/patroni
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: "0700"
+
+- name: "Create Database Directory And Giving Privileges"
+  ansible.builtin.file:
+    path: /data/pg_data
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: "Creating pgsql Directory"
+  ansible.builtin.file:
+    path: /var/lib/pgsql
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: "Setup Config Dir For Patroni"
+  ansible.builtin.file:
+    path: /etc/patroni
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: "0740"
+
+- name: "Checking For Patroni Jinja File"
+  tags:
+    - patroni_template
+  ansible.builtin.template:
+    src: 'patroni/templates/etc/patroni/patroni.yml.no.ssl.j2'
+    dest: /etc/patroni/patroni.yml
+    mode: "0744"
+  vars:
+    pg_data_dir: /data/pg_data
+    pg_bin_files: '{{ patroni_pg_ctl.stdout_lines[0] }}'
+
+- name: "Patroni Service Setting"
+  ansible.builtin.template:
+    src: 'patroni/templates/etc/systemd/system/patroni.service.j2'
+    dest: '/etc/systemd/system/patroni.service'
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: "Daemon Reload after patroni configuration"
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: "Starting Patroni Service"
+  ansible.builtin.systemd:
+    name: patroni.service
+    state: started
+    enabled: true

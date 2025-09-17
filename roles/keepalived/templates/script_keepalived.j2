@@ -1,0 +1,12 @@
+#!/bin/bash
+
+IP=$(hostname -I | awk '{print $1}')
+
+ROLE=$(curl -s http://$IP:8008/ | grep -o '"role": *"[^"]*"' | awk -F'"' '{print $4}')
+
+# Проверяем фактическое значение роли в твоем Patroni
+if [[ "$ROLE" == "primary" ]]; then
+    exit 0
+else
+    exit 1
+fi

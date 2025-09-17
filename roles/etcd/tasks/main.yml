@@ -1,0 +1,79 @@
+---
+- name: "Debug Print OS Family"
+  tags:
+    - os_family_debug
+  ansible.builtin.debug:
+    msg: "OS Family is {{ ansible_facts['os_family'] }}"
+
+- name: "Installing Patroni ETCD On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - python3-etcd
+      - etcd
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+
+- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - python3-etcd
+      - etcd
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
+
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - python3-etcd
+      - etcd-server
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
+
+- name: "Remove etcd data directory (cleanup before init)"
+  ansible.builtin.file:
+    path: /var/lib/etcd
+    state: absent
+
+- name: "Recreate etcd data directory"
+  ansible.builtin.file:
+    path: /var/lib/etcd
+    owner: etcd
+    group: etcd
+    mode: "0755"
+    state: directory
+
+- name: "Ensure /etc/etcd directory exists"
+  tags: [create_etcd_dir]
+  ansible.builtin.file:
+    path: /etc/etcd
+    owner: etcd
+    group: etcd
+    mode: "0755"
+    state: directory
+
+- name: "Generate etcd.conf in /etc/etcd"
+  tags: [gen_etcd_yml]
+  ansible.builtin.template:
+    src: etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
+    owner: etcd
+    group: etcd
+    mode: "0644"
+  vars:
+    peer_urls_port: '2380'
+    client_urls_port: '2379'
+
+- name: "Generate systemd unit file for etcd"
+  ansible.builtin.template:
+    src: etcd.service.copy.j2
+    dest: /usr/lib/systemd/system/etcd.service
+    mode: "0644"
+    owner: root
+    group: root
+  notify: Restart etcd
+
+- name: "Daemon reload"
+  ansible.builtin.systemd:
+    daemon_reload: true

@@ -1,0 +1,38 @@
+---
+- name: "Pripering hosts, cheching avaliable repositories if needs setting local repositories Installing And Creating Etcd Cluster"
+  hosts: etcd
+  become: true
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: ready_hosts
+    - role: repos
+    - role: etcd
+
+- name: "Installing And Creating Patroni Cluster"
+  hosts: patroni_hosts
+  become: true
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: patroni
+
+- name: "Installing Haproxy"
+  hosts: patroni_hosts
+  become: true
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: haproxy
+
+- name: "Installing Keepalived"
+  hosts: patroni_hosts
+  become: true
+  gather_facts: true
+  vars_files:
+    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: keepalived

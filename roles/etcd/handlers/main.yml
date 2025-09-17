@@ -1,0 +1,6 @@
+---
+- name: Restart etcd
+  ansible.builtin.systemd:
+    name: etcd.service
+    state: restarted
+    enabled: true

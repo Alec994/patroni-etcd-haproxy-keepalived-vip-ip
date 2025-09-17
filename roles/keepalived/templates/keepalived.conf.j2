@@ -1,0 +1,30 @@
+# {{ ansible_managed }}
+
+vrrp_script chk_haproxy {
+    script "/etc/keepalived/chk_haproxy.sh"
+    interval 5
+    weight -20
+    fall 2
+    rise 1
+}
+
+vrrp_instance vrrp_1 {
+    interface {{ ansible_default_ipv4.interface }}
+    state BACKUP
+    virtual_router_id 51
+    priority {{ (groups['patroni_hosts'].index(inventory_hostname) | int) | ternary(100 - (groups['patroni_hosts'].index(inventory_hostname) | int), 100) }}
+    nopreempt
+    advert_int 1
+
+    virtual_ipaddress {
+        {{ keepalived.vip }}/{{ keepalived.vip_netmask }}
+    }
+
+    track_interface {
+        {{ keepalived.keepalived_interface | default(ansible_default_ipv4.interface) }} weight -2
+    }
+
+    track_script {
+        chk_haproxy
+    }
+}

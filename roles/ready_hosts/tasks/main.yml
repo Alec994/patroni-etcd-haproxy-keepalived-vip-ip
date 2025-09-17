@@ -1,0 +1,46 @@
+- name: Deploy universal /etc/hosts
+  ansible.builtin.template:
+    src: "hosts.conf.j2"
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Updating Repositories If Distro Is RHEL-like"
+  ansible.builtin.dnf:
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
+
+- name: "Updating Repositories If Distro Is Debian-like"
+  ansible.builtin.apt:
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == "Debian" or ansible_facts['os_family'] == "Astra Linux"
+
+- name: "Adding ip_forward to hosts"
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    state: present
+    sysctl_set: true
+    reload: true
+
+- name: "Ensure SELinux is permissive on reboot"
+  ansible.builtin.lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=permissive'
+    backup: true
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
+
+- name: "Set SELinux to permissive"
+  ansible.builtin.command: setenforce 0
+  changed_when:
+    - ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
+    - ansible_facts['selinux']['status'] == "enabled"
+
+- name: "Reboot the host to apply SELinux changes"
+  ansible.builtin.reboot:
+    reboot_timeout: 120
+  when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
