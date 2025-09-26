@@ -1,0 +1,65 @@
+# CA для всех
+- name: "Deploy CA cert to all hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl.ca.cert_path }}"
+    dest: /etc/ssl/ca-cert.pem
+    owner: root
+    group: root
+    mode: '0644'
+
+# etcd
+- name: "Deploy etcd certs"
+  ansible.builtin.copy:
+    src: "{{ ssl.etcd_dir }}/{{ inventory_hostname }}.crt"
+    dest: "{{ ssl_dest.etcd }}/server.crt"
+    owner: etcd
+    group: etcd
+    mode: '0644'
+  when: inventory_hostname in groups['etcd']
+
+- name: "Deploy etcd key"
+  ansible.builtin.copy:
+    src: "{{ ssl.etcd_dir }}/{{ inventory_hostname }}.pem"
+    dest: "{{ ssl_dest.etcd }}/server.key"
+    owner: etcd
+    group: etcd
+    mode: '0600'
+  when: inventory_hostname in groups['etcd']
+
+# patroni
+- name: "Deploy patroni certs"
+  ansible.builtin.copy:
+    src: "{{ ssl.patroni_dir }}/{{ inventory_hostname }}.crt"
+    dest: "{{ ssl_dest.patroni }}/server.crt"
+    owner: postgres
+    group: postgres
+    mode: '0644'
+  when: inventory_hostname in groups['patroni']
+
+- name: "Deploy patroni key"
+  ansible.builtin.copy:
+    src: "{{ ssl.patroni_dir }}/{{ inventory_hostname }}.pem"
+    dest: "{{ ssl_dest.patroni }}/server.key"
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  when: inventory_hostname in groups['patroni']
+
+# haproxy (только на haproxy-хостах)
+- name: "Deploy haproxy cert"
+  ansible.builtin.copy:
+    src: "{{ ssl.haproxy_dir }}/haproxy.crt"
+    dest: "{{ ssl_dest.haproxy }}/haproxy.crt"
+    owner: root
+    group: root
+    mode: '0644'
+  when: inventory_hostname in groups['haproxy']
+
+- name: "Deploy haproxy key"
+  ansible.builtin.copy:
+    src: "{{ ssl.haproxy_dir }}/haproxy.pem"
+    dest: "{{ ssl_dest.haproxy }}/haproxy.pem"
+    owner: root
+    group: root
+    mode: '0600'
+  when: inventory_hostname in groups['haproxy']

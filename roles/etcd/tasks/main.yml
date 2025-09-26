@@ -5,13 +5,13 @@
   ansible.builtin.debug:
     msg: "OS Family is {{ ansible_facts['os_family'] }}"
 
-# - name: "Installing Patroni ETCD On RHEL-like Distro"
-#   ansible.builtin.dnf:
-#     name:
-#       - python3-etcd
-#       - etcd
-#     state: present
-#   when: ansible_facts['os_family'] == "RedHat"
+- name: "Installing Patroni ETCD On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - python3-etcd
+      - etcd
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
   ansible.builtin.dnf:
@@ -56,8 +56,8 @@
 - name: "Generate etcd.conf in /etc/etcd"
   tags: [gen_etcd_yml]
   ansible.builtin.template:
-    src: etcd.yml.j2
-    dest: /etc/etcd/etcd.yaml
+    src: etcd.conf.j2
+    dest: /etc/etcd/etcd.conf
     owner: etcd
     group: etcd
     mode: "0644"
@@ -67,7 +67,7 @@
 
 - name: "Generate systemd unit file for etcd"
   ansible.builtin.template:
-    src: etcd.service.j2
+    src: etcd.service.copy.j2
     dest: /usr/lib/systemd/system/etcd.service
     mode: "0644"
     owner: root

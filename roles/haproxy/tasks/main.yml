@@ -1,19 +1,19 @@
 ---
-# - name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
-#   ansible.builtin.dnf:
-#     name:
-#       - haproxy
-#     state: present
-#   when: ansible_facts['os_family'] == "RedHat" or
-#         ansible_facts['os_family'] == "RED"
+- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - haproxy
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
 
-# - name: "Installing Patroni On Debian-like Distro"
-#   ansible.builtin.apt:
-#     name:
-#       - haproxy
-#     state: present
-#   when: ansible_facts['os_family'] == "Debian" or
-#         ansible_facts['os_family'] == "Astra Linux"
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - haproxy
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
 
 - name: "Configuring haproxy"
   ansible.builtin.template:
@@ -29,4 +29,3 @@
     name: haproxy.service
     state: restarted
     enabled: true
-  ignore_errors: true

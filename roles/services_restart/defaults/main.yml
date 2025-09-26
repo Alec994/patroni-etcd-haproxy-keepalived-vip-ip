@@ -1,3 +1,0 @@
-services_restart_ssl_root_dir: "/etc/ssl/cluster"
-services_restart_data_base_dir: /data/pg_data
-services_restart_cert_dir: "{{ services_restart_ssl_root_dir }}/patroni"

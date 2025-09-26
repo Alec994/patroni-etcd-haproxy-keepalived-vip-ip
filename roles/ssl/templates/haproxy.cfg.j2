@@ -30,13 +30,8 @@ listen stats
     stats enable
     stats uri /
 
-
 listen primary
-{% if use_ssl %}
-    bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }} ssl crt /etc/ssl/cluster/haproxy/haproxy-full.pem
-{% else %}
     bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }}
-{% endif %}    
     option httpchk OPTIONS /master
     http-check expect status 200
     default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
@@ -45,11 +40,7 @@ listen primary
 {% endfor %}
 
 listen standby
-{% if use_ssl %}
-    bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }} ssl crt /etc/ssl/cluster/haproxy/haproxy-full.pem
-{% else %}
-    bind {{ keepalived.vip }}:{{ keepalived.haproxy_primary_port }}
-{% endif %} 
+    bind {{ keepalived.vip }}:{{ keepalived.haproxy_standby_port }}
     balance roundrobin
     option httpchk OPTIONS /replica
     http-check expect status 200

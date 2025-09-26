@@ -1,25 +1,25 @@
 ---
-# - name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
-#   ansible.builtin.dnf:
-#     name:
-#       - patroni
-#       - postgresql15
-#       - postgresql15-server
-#       - postgresql15-contrib
-#     state: present
-#   when: ansible_facts['os_family'] == "RedHat" or
-#         ansible_facts['os_family'] == "RED"
+- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - patroni
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
 
-# - name: "Installing Patroni On Debian-like Distro"
-#   ansible.builtin.apt:
-#     name:
-#       - patroni
-#       - postgresql15
-#       - postgresql15-server
-#       - postgresql15-contrib
-#     state: present
-#   when: ansible_facts['os_family'] == "Debian" or
-#         ansible_facts['os_family'] == "Astra Linux"
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - patroni
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
 
 
 - name: "Disabling Default PostgreSQL Service"
@@ -45,7 +45,7 @@
 - name: "Set pg_bin_files fact"
   ansible.builtin.set_fact:
     patroni_pg_bin_files: "{{ patroni_pg_ctl.stdout_lines[0] | default('') }}"
-  ignore_errors: false
+  failed_when: false
 
 - name: "Printing pg_ctl"
   ansible.builtin.debug:
@@ -91,13 +91,13 @@
     group: postgres
     mode: "0740"
 
-- name: "Coping Patroni Jinja File to /etc/patroni/patroni.yml"
+- name: "Checking For Patroni Jinja File"
+  tags:
+    - patroni_template
   ansible.builtin.template:
     src: 'patroni.yml.no.ssl.j2'
     dest: /etc/patroni/patroni.yml
     mode: "0744"
-    owner: root
-    group: root
   vars:
     pg_data_dir: /data/pg_data
     pg_bin_files: '{{ patroni_pg_ctl.stdout_lines[0] }}'
@@ -114,3 +114,9 @@
 - name: "Daemon Reload after patroni configuration"
   ansible.builtin.systemd:
     daemon_reload: true
+
+- name: "Starting Patroni Service"
+  ansible.builtin.systemd:
+    name: patroni.service
+    state: started
+    enabled: true
