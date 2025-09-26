@@ -1,0 +1,99 @@
+# roles/ssl/tasks/deploy.yml
+
+# =================== etcd ===================
+- name: Ensure etcd SSL directory exists
+  ansible.builtin.file:
+    path: "{{ ssl_etcd_dir }}"
+    state: directory
+    owner: etcd
+    group: etcd
+    mode: '0755'
+  when: inventory_hostname in groups['etcd']
+
+- name: Deploy etcd certificates
+  ansible.builtin.copy:
+    src: "{{ ssl_etcd_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ ssl_etcd_dir }}/{{ inventory_hostname }}.{{ item }}"
+    owner: etcd
+    group: etcd
+    mode: '0600'
+  loop:
+    - pem
+    - crt
+  when: inventory_hostname in groups['etcd']
+
+- name: Deploy CA certificate to etcd nodes
+  ansible.builtin.copy:
+    src: "{{ ssl_ca_cert_path }}"
+    dest: "{{ ssl_etcd_dir }}/ca.crt"
+    owner: etcd
+    group: etcd
+    mode: '0644'
+  when: inventory_hostname in groups['etcd']
+
+# =================== patroni (Postgres) ===================
+- name: Ensure patroni SSL directory exists
+  ansible.builtin.file:
+    path: "{{ ssl_patroni_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0755'
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: Deploy patroni certificates
+  ansible.builtin.copy:
+    src: "{{ ssl_patroni_dir }}/{{ inventory_hostname }}.{{ item }}"
+    dest: "{{ ssl_patroni_dir }}/{{ inventory_hostname }}.{{ item }}"
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  loop:
+    - pem
+    - crt
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: Deploy CA certificate to patroni nodes
+  ansible.builtin.copy:
+    src: "{{ ssl_ca_cert_path }}"
+    dest: "{{ ssl_patroni_dir }}/ca.crt"
+    owner: postgres
+    group: postgres
+    mode: '0644'
+  when: inventory_hostname in groups['patroni_hosts']
+
+# =================== haproxy ===================
+- name: Ensure haproxy SSL directory exists
+  ansible.builtin.file:
+    path: "{{ ssl_haproxy_dir }}"
+    state: directory
+    owner: haproxy
+    group: haproxy
+    mode: '0755'
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: Deploy haproxy key+cert (combined pem)
+  ansible.builtin.shell: |
+    cat {{ ssl_haproxy_dir }}/haproxy.pem {{ ssl_haproxy_dir }}/haproxy.crt > {{ ssl_haproxy_dir }}/haproxy-full.pem
+  args:
+    creates: "{{ ssl_haproxy_dir }}/haproxy-full.pem"
+  delegate_to: localhost
+  run_once: true
+
+- name: Copy haproxy pem to haproxy nodes
+  ansible.builtin.copy:
+    src: "{{ ssl_haproxy_dir }}/haproxy-full.pem"
+    dest: "{{ ssl_haproxy_dir }}/haproxy-full.pem"
+    owner: haproxy
+    group: haproxy
+    mode: '0600'
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: Deploy CA certificate to haproxy nodes
+  ansible.builtin.copy:
+    src: "{{ ssl_ca_cert_path }}"
+    dest: "{{ ssl_haproxy_dir }}/ca.crt"
+    owner: haproxy
+    group: haproxy
+    mode: '0644'
+  when: inventory_hostname in groups['patroni_hosts']

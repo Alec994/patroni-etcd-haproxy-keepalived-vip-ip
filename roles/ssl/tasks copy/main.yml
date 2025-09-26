@@ -1,0 +1,28 @@
+# roles/ssl/tasks/main.yml
+- name: Generate CA private key
+  ansible.builtin.command: openssl genrsa -out {{ ssl_ca_key_path }} 4096
+  args:
+    creates: "{{ ssl_ca_key_path }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Generate CA CSR
+  ansible.builtin.command: >
+    openssl req -new -key {{ ssl_ca_key_path }} -out {{ ssl_ca_csr_path }} -subj "/CN=MyCA"
+  args:
+    creates: "{{ ssl_ca_csr_path }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: Generate CA certificate
+  ansible.builtin.command: >
+    openssl x509 -req -in {{ ssl_ca_csr_path }} -signkey {{ ssl_ca_key_path }}
+    -out {{ ssl_ca_cert_path }} -days 3650
+  args:
+    creates: "{{ ssl_ca_cert_path }}"
+  delegate_to: localhost
+  run_once: true
+
+# Подключаем раскатку
+- name: Deploy certificates
+  include_tasks: deploy.yml

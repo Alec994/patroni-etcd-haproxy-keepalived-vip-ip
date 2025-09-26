@@ -4,3 +4,4 @@
     name: etcd.service
     state: restarted
     enabled: true
+  ignore_errors: true

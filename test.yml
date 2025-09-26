@@ -1,8 +1,22 @@
+# - name: "Installing And Creating Patroni Cluster"
+#   hosts: all_hosts
+#   become: true
+#   gather_facts: true
+#   roles:
+#     - role: ssl
+
 - name: "Installing And Creating Patroni Cluster"
-  hosts: patroni_hosts
+  hosts: etcd
   become: true
   gather_facts: true
-  vars_files:
-    - "{{ playbook_dir }}/playconf.yml"
   roles:
-    - role: common
+    - role: etcd
+
+- name: "Installing And Creating Patroni Cluster"
+  hosts: all_hosts
+  become: true
+  gather_facts: true
+  roles:
+    - role: services_restart
+
+  

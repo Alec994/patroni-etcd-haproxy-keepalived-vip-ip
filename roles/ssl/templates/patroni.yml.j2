@@ -12,11 +12,11 @@ etcd:
 {% for host in groups['etcd'] %}
     - {{ host }}:2379
 {% endfor %}
-{% if global.enable_ssl %}
+{% if use_ssl %}
   protocol: https
-  cacert: /etc/patroni/ssl/{{ ssl_ca_base_filename }}.crt
-  cert: /etc/patroni/ssl/{{ ansible_hostname }}.crt
-  key: /etc/patroni/ssl/{{ ansible_hostname }}.pem
+  cacert: /etc/ssl/cluster/patroni/ca.crt
+  cert: /etc/ssl/cluster/patroni/{{ ansible_hostname }}.crt
+  key: /etc/ssl/cluster/patroni/{{ ansible_hostname }}.pem
 {% endif %}
 
 bootstrap:

@@ -1,0 +1,84 @@
+{%- if use_ssl -%}
+{%-   set proto = 'https'  -%}
+{%- else  -%}
+{%-   set proto = 'http'   -%}
+{%- endif -%}
+{%- macro ip_url(port) -%}{{ proto }}://{{ ansible_host }}:{{ port }}{%- endmacro -%}
+{%- macro hostname_url(port) -%}{{ proto }}://{{ ansible_hostname }}:{{ port }}{%- endmacro -%}
+
+# ================= ETCD CONFIG =================
+
+# Human-readable name for this member.
+name: {{ inventory_hostname }}
+
+# Path to the data directory.
+data-dir: /var/lib/etcd/{{ inventory_hostname }}
+
+# Number of committed transactions to trigger a snapshot to disk.
+snapshot-count: 10000
+
+# Heartbeat/election tuning
+heartbeat-interval: 100
+election-timeout: 1000
+
+# Cluster setup
+initial-cluster: {% for host in groups['etcd'] -%}
+  {{ host }}={{ proto }}://{{ hostvars[host].ansible_host }}:2380{% if not loop.last %},{% endif %}
+{% endfor %}
+
+initial-cluster-state: new
+initial-cluster-token: P@ssw0rdTOKENWOULDBEP@ssw0rd
+
+# Peer/client communication
+listen-peer-urls: {{ ip_url(2380) }}
+listen-client-urls: {{ ip_url(2379) }},{{ proto }}://127.0.0.1:2379
+initial-advertise-peer-urls: {{ ip_url(2380) }}
+advertise-client-urls: {{ ip_url(2379) }}
+
+# ================= TLS for CLIENT =================
+{% if use_ssl %}
+client-transport-security:
+  cert-file: /etc/ssl/cluster/etcd/{{ inventory_hostname }}.crt
+  key-file: /etc/ssl/cluster/etcd/{{ inventory_hostname }}.pem
+  client-cert-auth: true
+  trusted-ca-file: /etc/ssl/cluster/ca.crt
+  auto-tls: false
+
+# ================= TLS for PEER =================
+peer-transport-security:
+  cert-file: /etc/ssl/cluster/etcd/{{ inventory_hostname }}.crt
+  key-file: /etc/ssl/cluster/etcd/{{ inventory_hostname }}.pem
+  client-cert-auth: true
+  trusted-ca-file: /etc/ssl/cluster/ca.crt
+  auto-tls: false
+
+# Security settings
+cipher-suites: [
+  TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+]
+tls-min-version: TLS1.2
+tls-max-version: TLS1.3
+{% else %}
+enable-v2: true
+{% endif %}
+
+# Logging
+log-level: debug
+logger: zap
+log-outputs: [stderr]
+
+# Compaction
+auto-compaction-mode: periodic
+auto-compaction-retention: "1"
+
+# Snapshots / WAL
+max-snapshots: 5
+max-wals: 5
+quota-backend-bytes: 0
+
+# Debug / profiling
+enable-pprof: true
+
+# Force new cluster (set true only if resetting!)
+force-new-cluster: false

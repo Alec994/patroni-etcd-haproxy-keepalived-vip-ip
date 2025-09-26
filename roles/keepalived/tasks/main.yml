@@ -1,19 +1,19 @@
 ---
-- name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
-  ansible.builtin.dnf:
-    name:
-      - keepalived
-    state: present
-  when: ansible_facts['os_family'] == "RedHat" or
-        ansible_facts['os_family'] == "RED"
+# - name: "Installing Patroni ETCD Postgresql15 On RHEL-like Distro"
+#   ansible.builtin.dnf:
+#     name:
+#       - keepalived
+#     state: present
+#   when: ansible_facts['os_family'] == "RedHat" or
+#         ansible_facts['os_family'] == "RED"
 
-- name: "Installing Patroni On Debian-like Distro"
-  ansible.builtin.apt:
-    name:
-      - keepalived
-    state: present
-  when: ansible_facts['os_family'] == "Debian" or
-        ansible_facts['os_family'] == "Astra Linux"
+# - name: "Installing Patroni On Debian-like Distro"
+#   ansible.builtin.apt:
+#     name:
+#       - keepalived
+#     state: present
+#   when: ansible_facts['os_family'] == "Debian" or
+#         ansible_facts['os_family'] == "Astra Linux"
 
 - name: "Coping haproxy script to hosts"
   ansible.builtin.template:

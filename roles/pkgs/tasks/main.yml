@@ -1,0 +1,32 @@
+---
+- name: "Debug Print OS Family"
+  ansible.builtin.debug:
+    msg: OS Family is {{ ansible_facts['os_family'] }}
+
+- name: "Installing Patroni On RHEL-like Distro"
+  ansible.builtin.dnf:
+    name:
+      - patroni
+      - python3-etcd
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+      - haproxy
+      - keepalived
+    state: present
+  when: ansible_facts['os_family'] == "RedHat" or
+        ansible_facts['os_family'] == "RED"
+
+- name: "Installing Patroni On Debian-like Distro"
+  ansible.builtin.apt:
+    name:
+      - patroni
+      - python3-etcd
+      - postgresql15
+      - postgresql15-server
+      - postgresql15-contrib
+      - haproxy
+      - keepalived
+    state: present
+  when: ansible_facts['os_family'] == "Debian" or
+        ansible_facts['os_family'] == "Astra Linux"
