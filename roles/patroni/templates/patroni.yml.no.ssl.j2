@@ -1,4 +1,3 @@
-
 scope: cluster_db                             
 name: {{ ansible_hostname }}
 
@@ -18,11 +17,29 @@ restapi:
   listen: {{ansible_facts['default_ipv4']['address']}}:8008
   connect_address: {{ansible_facts['default_ipv4']['address']}}:8008
 
+
+{% if use_ssl %}
+ctl:
+  cacert: /etc/ssl/cluster/ca.crt
+  cert: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.crt
+  key: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.pem
+{% endif %}
+
+
+{% if use_ssl %}
+etcd3:
+  hosts: [{% for host in groups['etcd'] %}"{{ hostvars[host].ansible_host }}:2379"{% if not loop.last %}, {% endif %}{% endfor %}]
+  protocol: https
+  cacert: /etc/ssl/cluster/ca.crt
+  cert: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.crt
+  key: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.pem
+{% else %}
 etcd:
-  hosts: 
-  {%for host in groups['etcd']%}
-- {{hostvars[host]['ansible_host']}}:2379
-  {%endfor%}
+  hosts:
+{% for host in groups['etcd'] %}
+  - {{ hostvars[host].ansible_host }}:2379
+{% endfor %}
+{% endif %}
 
 bootstrap:
   dcs:
@@ -36,6 +53,12 @@ bootstrap:
       use_pg_rewind: false
       use_slots: true
       parameters:
+{% if use_ssl %}
+        ssl: on
+        cacert: /etc/ssl/cluster/ca.crt
+        cert: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.crt
+        key: /etc/ssl/cluster/patroni/{{ inventory_hostname }}.pem
+{% endif %}
         max_connections: 200
         shared_buffers: 2GB
         effective_cache_size: 6GB
@@ -70,10 +93,10 @@ bootstrap:
         log_statement: all
         
   initdb:
-  - encoding: UTF8
-  - data-checksums
-  - auth: peer
-  - auth-host: scram-sha-256
+    - encoding: UTF8
+    - data-checksums
+    - auth: peer
+    - auth-host: scram-sha-256
   users:
     admin:
       password: password
@@ -97,7 +120,7 @@ postgresql:
   pg_hba:
     - local template1 postgres scram-sha-256
     - host all all 0.0.0.0/0 scram-sha-256
-    - host  all all {{ keepalived.vip}}/{{keepalived.vip_netmask}}
+#    - host  all all {{ patroni_vip}}/32
     {%for host in groups['patroni_hosts']  -%} {% if hostvars[host]['ansible_host'] ==  ansible_facts['default_ipv4']['address'] -%} 
     - host replication repl {{hostvars[host]['ansible_host']}}/32 reject 
     {% else -%}
@@ -118,5 +141,3 @@ tags:
     noloadbalance: false
     clonefrom: false
     nosync: false
-
-            

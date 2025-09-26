@@ -3,3 +3,4 @@ haproxy_vip_netmask: 24
 haproxy_stats_port: 7000
 haproxy_primary_port: 5000
 haproxy_standby_port: 5001
+haproxy_ssl_dir: "/etc/ssl/cluster/haproxy/"

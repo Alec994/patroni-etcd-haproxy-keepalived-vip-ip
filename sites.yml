@@ -1,21 +1,39 @@
 ---
-- name: "Pripering hosts, cheching avaliable repositories if needs setting local repositories Installing And Creating Etcd Cluster"
+- name: "Preparing hosts, checking available repositories, setting local repositories if needed"
   hosts: etcd
   become: true
   gather_facts: true
-  vars_files:
-    - "{{ playbook_dir }}/playconf.yml"
   roles:
     - role: ready_hosts
     - role: repos
-    - role: etcd
 
-- name: "Installing And Creating Patroni Cluster"
+- name: "Installing required packages"
   hosts: patroni_hosts
   become: true
   gather_facts: true
-  vars_files:
-    - "{{ playbook_dir }}/playconf.yml"
+  roles:
+    - role: pkgs
+
+# --- SSL сначала генерим на локальной машине
+- name: "Generate SSL certificates"
+  hosts: all_hosts
+  gather_facts: false
+  become: true
+  roles:
+    - role: ssl
+
+
+- name: "Installing and Creating Etcd Cluster"
+  hosts: etcd
+  become: true
+  gather_facts: true
+  roles:
+    - role: etcd
+
+- name: "Installing and Creating Patroni Cluster"
+  hosts: patroni_hosts
+  become: true
+  gather_facts: true
   roles:
     - role: patroni
 
@@ -23,8 +41,6 @@
   hosts: patroni_hosts
   become: true
   gather_facts: true
-  vars_files:
-    - "{{ playbook_dir }}/playconf.yml"
   roles:
     - role: haproxy
 
@@ -32,7 +48,12 @@
   hosts: patroni_hosts
   become: true
   gather_facts: true
-  vars_files:
-    - "{{ playbook_dir }}/playconf.yml"
   roles:
     - role: keepalived
+
+- name: "Restarting Services"
+  hosts: all_hosts
+  become: true
+  gather_facts: true
+  roles:
+    - role: services_restart

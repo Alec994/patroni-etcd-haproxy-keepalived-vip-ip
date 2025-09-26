@@ -1,0 +1,216 @@
+- name: "Creating directories on localhost"
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ssl_root_dir }}/{{ item }}"
+    mode: '0755'
+  loop:
+    - etcd
+    - patroni
+    - haproxy
+  delegate_to: localhost
+
+- name: "Creating directories on target hosts"
+  ansible.builtin.file:
+    state: directory
+    path: "{{ ssl_root_dir }}/{{ item }}"
+    mode: '0755'
+  loop:
+    - etcd
+    - patroni
+    - haproxy
+
+- name: "Generate ETCD Private Key"
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_etcd_dir }}/etcd.pem"
+  delegate_to: localhost
+
+- name: "Generate ETCD CSR"
+  community.crypto.openssl_csr:
+    path: "{{ ssl_etcd_dir }}/etcd.csr"
+    privatekey_path: "{{ ssl_etcd_dir }}/etcd.pem"
+    country_name: "{{ ssl_subject_country_name }}"
+    state_or_province_name: "{{ ssl_subject_state_or_province_name }}"
+    locality_name: "{{ ssl_subject_locality_name }}"
+    organization_name: "{{ ssl_subject_organization_name }}"
+    organizational_unit_name: "{{ ssl_subject_organizational_unit_name }}"
+    common_name: "etcd"
+    key_usage:
+      - digitalSignature
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    subject_alt_name:
+      - DNS:etcd
+      - DNS:localhost
+      - IP:127.0.0.1
+  delegate_to: localhost
+
+
+- name: "Generate Patroni Private Key"
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_patroni_dir }}/patroni.pem"
+  delegate_to: localhost
+
+- name: "Generate Patorni Certificate"
+  community.crypto.x509_certificate:
+    path: "{{ ssl_etcd_dir }}/etcd.crt"
+    privatekey_path: "{{ ssl_etcd_dir }}/etcd.pem"
+    csr_path: "{{ ssl_etcd_dir }}/etcd.csr"
+    ownca_path: "{{ ssl_ca_cert_path }}"
+    ownca_privatekey_path: "{{ ssl_ca_privatekey_path }}"
+    provider: ownca
+    ownca_not_after: "+3650d"
+  delegate_to: localhost
+
+
+# --- HAProxy ---
+- name: "Generate HAProxy Private Key"
+  community.crypto.openssl_privatekey:
+    path: "{{ ssl_haproxy_dir }}/haproxy.pem"
+  delegate_to: localhost
+
+- name: "Generate HAProxy CSR"
+  community.crypto.openssl_csr:
+    path: "{{ ssl_haproxy_dir }}/haproxy.csr"
+    privatekey_path: "{{ ssl_haproxy_dir }}/haproxy.pem"
+    country_name: "{{ ssl_subject_country_name }}"
+    state_or_province_name: "{{ ssl_subject_state_or_province_name }}"
+    locality_name: "{{ ssl_subject_locality_name }}"
+    organization_name: "{{ ssl_subject_organization_name }}"
+    organizational_unit_name: "{{ ssl_subject_organizational_unit_name }}"
+    common_name: "haproxy"
+    key_usage:
+      - digitalSignature
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    subject_alt_name:
+      - DNS:haproxy
+      - DNS:localhost
+      - IP:127.0.0.1
+  delegate_to: localhost
+
+- name: "Generate Patroni CSR"
+  community.crypto.openssl_csr:
+    path: "{{ ssl_patroni_dir }}/patroni.csr"
+    privatekey_path: "{{ ssl_patroni_dir }}/patroni.pem"
+    country_name: "{{ ssl_subject_country_name }}"
+    state_or_province_name: "{{ ssl_subject_state_or_province_name }}"
+    locality_name: "{{ ssl_subject_locality_name }}"
+    organization_name: "{{ ssl_subject_organization_name }}"
+    organizational_unit_name: "{{ ssl_subject_organizational_unit_name }}"
+    common_name: "patroni"
+    key_usage:
+      - digitalSignature
+    extended_key_usage:
+      - serverAuth
+      - clientAuth
+    subject_alt_name:
+      - DNS:patroni
+      - DNS:localhost
+      - IP:127.0.0.1
+  delegate_to: localhost
+
+
+- name: "Generate Patorni Certificate"
+  community.crypto.x509_certificate:
+    path: "{{ ssl_patroni_dir }}/patroni.crt"
+    privatekey_path: "{{ ssl_patroni_dir }}/patroni.pem"
+    csr_path: "{{ ssl_patroni_dir }}/patroni.csr"
+    ownca_path: "{{ ssl_ca_cert_path }}"
+    ownca_privatekey_path: "{{ ssl_ca_privatekey_path }}"
+    provider: ownca
+    ownca_not_after: "+3650d"
+  delegate_to: localhost
+
+
+- name: "Generate HAProxy Certificate"
+  community.crypto.x509_certificate:
+    path: "{{ ssl_haproxy_dir }}/haproxy.crt"
+    privatekey_path: "{{ ssl_haproxy_dir }}/haproxy.pem"
+    csr_path: "{{ ssl_haproxy_dir }}/haproxy.csr"
+    ownca_path: "{{ ssl_ca_cert_path }}"
+    ownca_privatekey_path: "{{ ssl_ca_privatekey_path }}"
+    provider: ownca
+    ownca_not_after: "+3650d"
+  delegate_to: localhost
+
+# --- Create combined PEM file for HAProxy ---
+- name: "Create combined PEM file for HAProxy on localhost"
+  ansible.builtin.shell:
+    cmd: "cat {{ ssl_haproxy_dir }}/haproxy.crt {{ ssl_haproxy_dir }}/haproxy.pem > {{ ssl_haproxy_dir }}/haproxy-full.pem"
+  delegate_to: localhost
+  run_once: true
+
+
+- name: "Copy combined HAProxy PEM file to haproxy hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_haproxy_dir }}/haproxy-full.pem"
+    dest: "{{ ssl_haproxy_dir }}/haproxy-full.pem"
+    mode: '0600'
+    owner: root
+    group: root
+  when: inventory_hostname in groups['patroni_hosts']
+
+# --- Copy certificates to target hosts ---
+- name: "Copy CA certificate to all hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_ca_cert_path }}"
+    dest: "{{ ssl_root_dir }}/ca.crt"
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: "Copy etcd certificates to etcd hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_etcd_dir }}/{{ ansible_hostname }}.crt"
+    dest: "{{ ssl_etcd_dir }}/{{ ansible_hostname }}.crt"
+    mode: '0644'
+    owner: etcd
+    group: etcd
+  when: inventory_hostname in groups['etcd']
+
+- name: "Copy etcd private keys to etcd hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_etcd_dir }}/{{ ansible_hostname }}.pem"
+    dest: "{{ ssl_etcd_dir }}/{{ ansible_hostname }}.pem"
+    mode: '0600'
+    owner: etcd
+    group: etcd
+  when: inventory_hostname in groups['etcd']
+
+- name: "Copy patroni certificates to patroni hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_patroni_dir }}/{{ ansible_hostname }}.crt"
+    dest: "{{ ssl_patroni_dir }}/{{ ansible_hostname }}.crt"
+    mode: '0644'
+    owner: postgres
+    group: postgres
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: "Copy patroni private keys to patroni hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_patroni_dir }}/{{ ansible_hostname }}.pem"
+    dest: "{{ ssl_patroni_dir }}/{{ ansible_hostname }}.pem"
+    mode: '0600'
+    owner: postgres
+    group: postgres
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: "Copy haproxy certificate to haproxy hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_haproxy_dir }}/haproxy.crt"
+    dest: "{{ ssl_haproxy_dir }}/haproxy.crt"
+    mode: '0644'
+    owner: root
+    group: root
+  when: inventory_hostname in groups['patroni_hosts']
+
+- name: "Copy haproxy private key to haproxy hosts"
+  ansible.builtin.copy:
+    src: "{{ ssl_haproxy_dir }}/haproxy.pem"
+    dest: "{{ ssl_haproxy_dir }}/haproxy.pem"
+    mode: '0600'
+    owner: root
+    group: root
+  when: inventory_hostname in groups['patroni_hosts']

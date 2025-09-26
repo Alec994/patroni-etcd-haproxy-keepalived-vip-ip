@@ -1,6 +1,10 @@
 # {{ ansible_managed }}
 # HAProxy configuration template
-
+{% if use_ssl %}
+{%-   set proto = 'https'  -%}
+{%- else  -%}
+{%-   set proto = 'http'   -%}
+{% endif %}
 global
     log 127.0.0.1 local2
     log /dev/log local0
@@ -31,7 +35,11 @@ listen stats
     stats uri /
 
 listen primary
+{% if use_ssl %}
+    bind {{ haproxy_vip }}:{{ haproxy_primary_port }} ssl crt {{ haproxy_ssl_dir }}/haproxy-full.pem
+{% else %}
     bind {{ haproxy_vip }}:{{ haproxy_primary_port }}
+{% endif %} 
     option httpchk OPTIONS /master
     http-check expect status 200
     default-server inter 3s fall 3 rise 2 on-marked-down shutdown-sessions
@@ -40,7 +48,11 @@ listen primary
 {% endfor %}
 
 listen standby
+{% if use_ssl %}
+    bind {{ haproxy_vip }}:{{ haproxy_standby_port }} ssl crt {{ haproxy_ssl_dir }}/haproxy-full.pem
+{% else %}
     bind {{ haproxy_vip }}:{{ haproxy_standby_port }}
+{% endif %} 
     balance roundrobin
     option httpchk OPTIONS /replica
     http-check expect status 200

@@ -26,19 +26,20 @@
     sysctl_set: true
     reload: true
 
-- name: "Ensure SELinux is permissive on reboot"
+- name: "Ensure SELinux is disabled on reboot"
   ansible.builtin.lineinfile:
     path: /etc/selinux/config
     regexp: '^SELINUX='
-    line: 'SELINUX=permissive'
+    line: 'SELINUX=disabled'
     backup: true
   when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
 
-- name: "Set SELinux to permissive"
-  ansible.builtin.command: setenforce 0
-  changed_when:
-    - ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
-    - ansible_facts['selinux']['status'] == "enabled"
+# - name: "Set SELinux to disabled"
+#   ansible.builtin.command: setenforce 0
+#   changed_when:
+#     - ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "RED"
+#     - ansible_facts['selinux']['status'] == "enabled"
+
 
 - name: "Reboot the host to apply SELinux changes"
   ansible.builtin.reboot:
